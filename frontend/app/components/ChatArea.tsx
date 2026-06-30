@@ -221,8 +221,8 @@ export default function ChatArea({ chatId, onChatCreated, selectedModel, onModel
   ];
 
   return (
-    <div className="flex flex-1 flex-col h-screen bg-slate-50/50">
-      <header className="flex h-16 items-center justify-between border-b border-slate-200 bg-white px-6 shadow-sm">
+    <div className="flex flex-1 flex-col h-screen bg-slate-50/30">
+      <header className="flex h-16 shrink-0 items-center justify-between bg-transparent px-8 pt-6">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
             <Cpu className="h-4.5 w-4.5" />
@@ -287,7 +287,7 @@ export default function ChatArea({ chatId, onChatCreated, selectedModel, onModel
               return (
                 <div key={index} className={`flex gap-4 ${isUser ? "justify-end" : "justify-start"} animate-slide-up-fade`}>
                   {!isUser && (
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-100">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
                       <Cpu className="h-4.5 w-4.5" />
                     </div>
                   )}
@@ -297,7 +297,7 @@ export default function ChatArea({ chatId, onChatCreated, selectedModel, onModel
                       className={`rounded-2xl px-4 py-3 text-sm shadow-sm leading-relaxed ${
                         isUser
                           ? "bg-indigo-600 text-white"
-                          : "bg-white text-slate-800 border border-slate-200"
+                          : "bg-white text-slate-800 border border-slate-100"
                       }`}
                     >
                       {isUser ? (
@@ -319,7 +319,7 @@ export default function ChatArea({ chatId, onChatCreated, selectedModel, onModel
                   </div>
 
                   {isUser && (
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-200 text-slate-600 border border-slate-300">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-600">
                       <User className="h-4.5 w-4.5" />
                     </div>
                   )}
@@ -328,11 +328,11 @@ export default function ChatArea({ chatId, onChatCreated, selectedModel, onModel
             })}
 
             {loading && (
-              <div className="flex gap-4 justify-start">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-100">
+              <div className="flex gap-4 justify-start animate-slide-up-fade">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
                   <Cpu className="h-4.5 w-4.5" />
                 </div>
-                <div className="rounded-2xl bg-white border border-slate-200 px-4 py-3.5 shadow-sm">
+                <div className="rounded-2xl bg-white border border-slate-100 px-4 py-3.5 shadow-sm">
                   <div className="flex items-center gap-1">
                     <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400" />
                     <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400 [animation-delay:0.2s]" />
@@ -346,8 +346,8 @@ export default function ChatArea({ chatId, onChatCreated, selectedModel, onModel
         )}
       </div>
 
-      <div className="border-t border-slate-200 bg-white p-4">
-        <form onSubmit={handleSend} className="max-w-3xl mx-auto flex flex-col border border-slate-200 rounded-2xl bg-slate-50 p-2 shadow-inner focus-within:border-indigo-600 focus-within:bg-white transition-all duration-200">
+      <div className="bg-transparent px-6 pb-6 pt-2">
+        <form onSubmit={handleSend} className="max-w-3xl mx-auto flex flex-col border border-slate-200/80 rounded-2xl bg-white p-3 shadow-xl shadow-slate-100/60 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 transition-all duration-200">
           <textarea
             ref={textareaRef}
             rows={1}
@@ -358,7 +358,7 @@ export default function ChatArea({ chatId, onChatCreated, selectedModel, onModel
             className="w-full resize-none bg-transparent py-2 px-3 text-sm text-slate-800 outline-none max-h-48 overflow-y-auto leading-relaxed border-0 focus:ring-0 focus:outline-none"
           />
           
-          <div className="flex items-center justify-between border-t border-slate-100/80 pt-2 px-2 mt-2">
+          <div className="flex items-center justify-between border-t border-slate-100/60 pt-2.5 px-1 mt-1">
             <div className="relative" ref={dropdownRef}>
               <button
                 type="button"
