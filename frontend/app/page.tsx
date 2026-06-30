@@ -5,15 +5,14 @@ import { useAuth } from "./context/AuthContext";
 import AuthPage from "./auth/page";
 import Sidebar from "./components/Sidebar";
 import ChatArea from "./components/ChatArea";
-import AnalyticsPanel from "./components/AnalyticsPanel";
-import ProfileModal from "./components/ProfileModal";
+import DashboardView from "./components/DashboardView";
 
 export default function Home() {
   const { isLoading, isAuthenticated, logout } = useAuth();
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [selectedModel, setSelectedModel] = useState<string>("");
-  const [showAnalytics, setShowAnalytics] = useState<boolean>(false);
-  const [profileOpen, setProfileOpen] = useState<boolean>(false);
+  const [activeView, setActiveView] = useState<"chat" | "dashboard">("chat");
+  const [dashboardTab, setDashboardTab] = useState<"analytics" | "settings">("analytics");
   const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
 
   if (isLoading) {
@@ -31,23 +30,31 @@ export default function Home() {
     return <AuthPage />;
   }
 
+  const handleToggleDashboard = (show: boolean, tab?: "analytics" | "settings") => {
+    setActiveView(show ? "dashboard" : "chat");
+    if (tab) {
+      setDashboardTab(tab);
+    }
+  };
+
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-slate-50">
       <Sidebar
         activeChatId={activeChatId}
         onSelectChat={setActiveChatId}
-        selectedModel={selectedModel}
-        onModelChange={setSelectedModel}
-        showAnalytics={showAnalytics}
-        onToggleAnalytics={setShowAnalytics}
-        onOpenProfile={() => setProfileOpen(true)}
+        showDashboard={activeView === "dashboard"}
+        onToggleDashboard={handleToggleDashboard}
         onLogout={logout}
         refreshTrigger={refreshTrigger}
       />
 
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {showAnalytics ? (
-          <AnalyticsPanel />
+        {activeView === "dashboard" ? (
+          <DashboardView
+            activeTab={dashboardTab}
+            setActiveTab={setDashboardTab}
+            onClose={() => setActiveView("chat")}
+          />
         ) : (
           <ChatArea
             chatId={activeChatId}
@@ -56,11 +63,10 @@ export default function Home() {
               setRefreshTrigger((prev) => prev + 1);
             }}
             selectedModel={selectedModel}
+            onModelChange={setSelectedModel}
           />
         )}
       </main>
-
-      <ProfileModal isOpen={profileOpen} onClose={() => setProfileOpen(false)} />
     </div>
   );
 }

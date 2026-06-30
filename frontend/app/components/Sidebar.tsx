@@ -1,17 +1,15 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import { api, ChatMetadata } from "../lib/api";
-import { Plus, MessageSquare, Trash2, Settings, BarChart2, LogOut, ChevronDown, Check, Sparkles } from "lucide-react";
+import { Plus, MessageSquare, Trash2, LogOut, Sparkles } from "lucide-react";
 
 interface SidebarProps {
   activeChatId: string | null;
   onSelectChat: (chatId: string | null) => void;
-  selectedModel: string;
-  onModelChange: (model: string) => void;
-  showAnalytics: boolean;
-  onToggleAnalytics: (show: boolean) => void;
-  onOpenProfile: () => void;
+  showDashboard: boolean;
+  onToggleDashboard: (show: boolean, tab?: "analytics" | "settings") => void;
   onLogout: () => void;
   refreshTrigger: number;
 }
@@ -19,17 +17,13 @@ interface SidebarProps {
 export default function Sidebar({
   activeChatId,
   onSelectChat,
-  selectedModel,
-  onModelChange,
-  showAnalytics,
-  onToggleAnalytics,
-  onOpenProfile,
+  showDashboard,
+  onToggleDashboard,
   onLogout,
   refreshTrigger,
 }: SidebarProps) {
+  const { user } = useAuth();
   const [chats, setChats] = useState<ChatMetadata[]>([]);
-  const [models, setModels] = useState<string[]>([]);
-  const [modelDropdownOpen, setModelDropdownOpen] = useState<boolean>(false);
   const [loadingChats, setLoadingChats] = useState<boolean>(false);
 
   const fetchChats = async () => {
@@ -43,23 +37,9 @@ export default function Sidebar({
     }
   };
 
-  const fetchModels = async () => {
-    try {
-      const res = await api.getAvailableModels();
-      setModels(res.all_models || []);
-      if (!selectedModel && res.default_model) {
-        onModelChange(res.default_model);
-      }
-    } catch (_) {}
-  };
-
   useEffect(() => {
     fetchChats();
   }, [activeChatId, refreshTrigger]);
-
-  useEffect(() => {
-    fetchModels();
-  }, []);
 
   const handleDeleteChat = async (e: React.MouseEvent, chatId: string) => {
     e.stopPropagation();
@@ -73,8 +53,18 @@ export default function Sidebar({
     } catch (_) {}
   };
 
+  const getInitials = (name?: string) => {
+    if (!name) return "U";
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .substring(0, 2)
+      .toUpperCase();
+  };
+
   return (
-    <aside className="flex h-screen w-80 flex-col border-r border-slate-200 bg-white shadow-sm transition-all duration-300">
+    <aside className="flex h-screen w-80 shrink-0 flex-col border-r border-slate-200 bg-white shadow-sm transition-all duration-300">
       <div className="flex items-center gap-2 px-6 py-5 border-b border-slate-100">
         <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-100">
           <Sparkles className="h-5 w-5" />
@@ -88,7 +78,7 @@ export default function Sidebar({
       <div className="px-4 py-4 border-b border-slate-100">
         <button
           onClick={() => {
-            onToggleAnalytics(false);
+            onToggleDashboard(false);
             onSelectChat(null);
           }}
           className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-indigo-500 hover:shadow-md active:scale-98"
@@ -106,12 +96,12 @@ export default function Sidebar({
           <p className="text-center text-xs text-slate-400 py-8">No conversations yet</p>
         ) : (
           chats.map((chat) => {
-            const isActive = activeChatId === chat.chat_id && !showAnalytics;
+            const isActive = activeChatId === chat.chat_id && !showDashboard;
             return (
               <div
                 key={chat.chat_id}
                 onClick={() => {
-                  onToggleAnalytics(false);
+                  onToggleDashboard(false);
                   onSelectChat(chat.chat_id);
                 }}
                 className={`group flex items-center justify-between rounded-xl px-3 py-3 text-sm font-medium transition-all duration-150 cursor-pointer ${
@@ -136,63 +126,30 @@ export default function Sidebar({
         )}
       </div>
 
-      <div className="border-t border-slate-100 p-4 bg-slate-50/50 space-y-3">
-        <div className="relative">
-          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Active Model</label>
-          <button
-            onClick={() => setModelDropdownOpen(!modelDropdownOpen)}
-            className="flex w-full items-center justify-between rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-all hover:bg-slate-50 active:bg-slate-100"
+      {user && (
+        <div className="border-t border-slate-100 p-4 bg-slate-50/50 flex items-center justify-between gap-3">
+          <div
+            onClick={() => onToggleDashboard(true, "analytics")}
+            className="flex items-center gap-3 min-w-0 flex-1 cursor-pointer p-1.5 rounded-xl hover:bg-slate-100/80 transition-all active:scale-98"
           >
-            <span className="truncate">{selectedModel || "Select Model"}</span>
-            <ChevronDown className="h-4 w-4 text-slate-400 shrink-0" />
-          </button>
-
-          {modelDropdownOpen && (
-            <div className="absolute bottom-full left-0 z-50 mb-2 w-full rounded-xl border border-slate-200 bg-white p-1 shadow-lg max-h-48 overflow-y-auto">
-              {models.map((model) => (
-                <button
-                  key={model}
-                  onClick={() => {
-                    onModelChange(model);
-                    setModelDropdownOpen(false);
-                  }}
-                  className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-slate-900"
-                >
-                  <span className="truncate">{model}</span>
-                  {selectedModel === model && <Check className="h-4 w-4 text-indigo-600 shrink-0" />}
-                </button>
-              ))}
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-600 font-bold text-xs text-white uppercase shadow-sm">
+              {getInitials(user.name)}
             </div>
-          )}
-        </div>
-
-        <div className="space-y-1">
-          <button
-            onClick={() => onToggleAnalytics(true)}
-            className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all ${
-              showAnalytics
-                ? "bg-indigo-50 text-indigo-950 border-l-4 border-indigo-600"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-            }`}
-          >
-            <BarChart2 className="h-4 w-4 text-slate-400" /> Token Analytics
-          </button>
-
-          <button
-            onClick={onOpenProfile}
-            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-100 hover:text-slate-900"
-          >
-            <Settings className="h-4 w-4 text-slate-400" /> Account Settings
-          </button>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-bold text-slate-900 truncate leading-tight">{user.name}</p>
+              <p className="text-[10px] text-slate-400 truncate leading-normal mt-0.5">{user.email}</p>
+            </div>
+          </div>
 
           <button
             onClick={onLogout}
-            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-red-600 transition-all hover:bg-red-50 hover:text-red-700"
+            className="rounded-xl border border-slate-200 bg-white p-2.5 text-slate-400 hover:text-red-600 hover:border-red-100 hover:bg-red-50/40 transition-all active:scale-95 shrink-0"
+            title="Sign Out"
           >
-            <LogOut className="h-4 w-4" /> Sign Out
+            <LogOut className="h-4 w-4" />
           </button>
         </div>
-      </div>
+      )}
     </aside>
   );
 }
