@@ -81,7 +81,37 @@
                         },
                         "description": "Root endpoint with API information"
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "body": {},
+                                "url": {
+                                    "raw": "{{base_url}}/",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        ""
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json",
+                                    "type": "text"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"message\": \"string\",\n    \"docs\": \"string\",\n    \"version\": \"string\"\n}"
+                        }
+                    ]
                 },
                 {
                     "name": "Health Check",
@@ -102,7 +132,37 @@
                         },
                         "description": "Health check endpoint"
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "body": {},
+                                "url": {
+                                    "raw": "{{base_url}}/health",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "health"
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json",
+                                    "type": "text"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"status\": \"string\"\n}"
+                        }
+                    ]
                 }
             ],
             "description": "Root and health check endpoints"
@@ -139,7 +199,46 @@
                         },
                         "description": "Generate and send OTP to user's email. Creates a 6-digit OTP, stores it in the database with 5-minute expiration."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"email\": \"user@example.com\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/auth/generate-otp",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "auth",
+                                        "generate-otp"
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json",
+                                    "type": "text"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"message\": \"string\"\n}"
+                        }
+                    ]
                 },
                 {
                     "name": "Step 2: Signup User",
@@ -187,7 +286,47 @@
                         },
                         "description": "Register a new user account. Verifies the OTP, creates a new user with 'student' role, sends welcome email, and returns access and refresh tokens."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"user@example.com\",\n    \"password\": \"SecurePassword123!\",\n    \"otp\": 123456\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/auth/signup/user",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "auth",
+                                        "signup",
+                                        "user"
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json",
+                                    "type": "text"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"access_token\": \"string\",\n    \"refresh_token\": \"string\",\n    \"token_type\": \"string\"\n}"
+                        }
+                    ]
                 },
                 {
                     "name": "Step 2: Signup Admin",
@@ -235,7 +374,47 @@
                         },
                         "description": "Register a new admin account. Verifies the OTP, creates a new user with 'admin' role, sends welcome email, and returns access and refresh tokens."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"name\": \"Admin User\",\n    \"email\": \"admin@example.com\",\n    \"password\": \"SecureAdminPassword123!\",\n    \"otp\": 123456\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/auth/signup/admin",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "auth",
+                                        "signup",
+                                        "admin"
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json",
+                                    "type": "text"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"access_token\": \"string\",\n    \"refresh_token\": \"string\",\n    \"token_type\": \"string\"\n}"
+                        }
+                    ]
                 },
                 {
                     "name": "Login User",
@@ -294,7 +473,58 @@
                         },
                         "description": "Authenticate user and return access tokens. Validates credentials, sends login notification email, and returns JWT tokens."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/x-www-form-urlencoded"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "urlencoded",
+                                    "urlencoded": [
+                                        {
+                                            "key": "username",
+                                            "value": "user@example.com",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "password",
+                                            "value": "SecurePassword123!",
+                                            "type": "text"
+                                        }
+                                    ]
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/auth/login/user",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "auth",
+                                        "login",
+                                        "user"
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json",
+                                    "type": "text"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"access_token\": \"string\",\n    \"refresh_token\": \"string\",\n    \"token_type\": \"string\"\n}"
+                        }
+                    ]
                 },
                 {
                     "name": "Login Admin",
@@ -353,7 +583,58 @@
                         },
                         "description": "Authenticate admin and return access tokens. Validates credentials, checks for admin role, sends login notification email, and returns JWT tokens."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/x-www-form-urlencoded"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "urlencoded",
+                                    "urlencoded": [
+                                        {
+                                            "key": "username",
+                                            "value": "admin@example.com",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "password",
+                                            "value": "SecureAdminPassword123!",
+                                            "type": "text"
+                                        }
+                                    ]
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/auth/login/admin",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "auth",
+                                        "login",
+                                        "admin"
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json",
+                                    "type": "text"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"access_token\": \"string\",\n    \"refresh_token\": \"string\",\n    \"token_type\": \"string\"\n}"
+                        }
+                    ]
                 },
                 {
                     "name": "Refresh Token",
@@ -398,7 +679,38 @@
                         },
                         "description": "Refresh access token using a valid refresh token."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [],
+                                "body": {},
+                                "url": {
+                                    "raw": "{{base_url}}/auth/refresh-token",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "auth",
+                                        "refresh-token"
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json",
+                                    "type": "text"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"access_token\": \"string\",\n    \"refresh_token\": \"string\",\n    \"token_type\": \"string\"\n}"
+                        }
+                    ]
                 },
                 {
                     "name": "Password Reset - Request OTP",
@@ -430,7 +742,47 @@
                         },
                         "description": "Request a password reset by sending an OTP to the user's email. Generates an OTP and emails it to the user if the account exists."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"email\": \"user@example.com\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/auth/password-reset/request",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "auth",
+                                        "password-reset",
+                                        "request"
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json",
+                                    "type": "text"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"message\": \"string\"\n}"
+                        }
+                    ]
                 },
                 {
                     "name": "Password Reset - Verify OTP & Reset",
@@ -462,7 +814,47 @@
                         },
                         "description": "Verify OTP and reset the user's password. Validates the OTP, updates the user's password, and sends confirmation email."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"email\": \"user@example.com\",\n    \"otp\": 123456,\n    \"new_password\": \"NewSecurePassword123!\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/auth/password-reset/verify",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "auth",
+                                        "password-reset",
+                                        "verify"
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json",
+                                    "type": "text"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"message\": \"string\"\n}"
+                        }
+                    ]
                 }
             ],
             "description": "Authentication endpoints for signup, login, and password reset"
@@ -513,7 +905,46 @@
                         },
                         "description": "Send a message to start a new chat. Creates a new chat session and returns the assistant's response with a new chat_id."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"message\": \"Hello! Can you help me with Python programming?\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/chatbot/chat",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "chatbot",
+                                        "chat"
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json",
+                                    "type": "text"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"response\": \"string\",\n    \"chat_id\": \"string\",\n    \"usage\": {\n        \"input_tokens\": 1,\n        \"output_tokens\": 1,\n        \"total_tokens\": 1,\n        \"input_token_details\": {\n            \"cache_read\": 1,\n            \"cache_creation\": 1,\n            \"audio\": 1,\n            \"text\": 1\n        },\n        \"output_token_details\": {\n            \"reasoning\": 1,\n            \"audio\": 1,\n            \"text\": 1\n        }\n    }\n}"
+                        }
+                    ]
                 },
                 {
                     "name": "Send Message - Continue Chat",
@@ -541,7 +972,46 @@
                         },
                         "description": "Continue an existing chat conversation by providing the chat_id. Maintains conversation history."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"message\": \"Can you explain list comprehensions?\",\n    \"chat_id\": \"{{chat_id}}\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/chatbot/chat",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "chatbot",
+                                        "chat"
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json",
+                                    "type": "text"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"response\": \"string\",\n    \"chat_id\": \"string\",\n    \"usage\": {\n        \"input_tokens\": 1,\n        \"output_tokens\": 1,\n        \"total_tokens\": 1,\n        \"input_token_details\": {\n            \"cache_read\": 1,\n            \"cache_creation\": 1,\n            \"audio\": 1,\n            \"text\": 1\n        },\n        \"output_token_details\": {\n            \"reasoning\": 1,\n            \"audio\": 1,\n            \"text\": 1\n        }\n    }\n}"
+                        }
+                    ]
                 },
                 {
                     "name": "Send Message - With Specific Model",
@@ -569,7 +1039,46 @@
                         },
                         "description": "Send a message using a specific LLM model. Allows choosing between available models like gemini-3.1-flash-lite, gemini-3-flash-preview, etc."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"message\": \"Explain quantum computing in simple terms\",\n    \"chat_id\": \"{{chat_id}}\",\n    \"model_name\": \"gemini-3.1-flash-lite\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/chatbot/chat",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "chatbot",
+                                        "chat"
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json",
+                                    "type": "text"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"response\": \"string\",\n    \"chat_id\": \"string\",\n    \"usage\": {\n        \"input_tokens\": 1,\n        \"output_tokens\": 1,\n        \"total_tokens\": 1,\n        \"input_token_details\": {\n            \"cache_read\": 1,\n            \"cache_creation\": 1,\n            \"audio\": 1,\n            \"text\": 1\n        },\n        \"output_token_details\": {\n            \"reasoning\": 1,\n            \"audio\": 1,\n            \"text\": 1\n        }\n    }\n}"
+                        }
+                    ]
                 },
                 {
                     "name": "Get Available Models",
@@ -588,7 +1097,38 @@
                         },
                         "description": "Get list of all available LLM models. Returns models grouped by provider, based on configured API keys."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "body": {},
+                                "url": {
+                                    "raw": "{{base_url}}/chatbot/available-models",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "chatbot",
+                                        "available-models"
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json",
+                                    "type": "text"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"default_model\": \"string\",\n    \"providers\": {},\n    \"all_models\": [\n        \"string\"\n    ],\n    \"total_models\": 1\n}"
+                        }
+                    ]
                 },
                 {
                     "name": "Get All Chats",
@@ -607,7 +1147,38 @@
                         },
                         "description": "Retrieve all chat sessions for the authenticated user. Returns chat metadata sorted by most recently updated."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "body": {},
+                                "url": {
+                                    "raw": "{{base_url}}/chatbot/chats",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "chatbot",
+                                        "chats"
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json",
+                                    "type": "text"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"chats\": [\n        {\n            \"SessionId\": \"string\",\n            \"user_id\": \"string\",\n            \"chat_id\": \"string\",\n            \"title\": \"string\",\n            \"message_count\": 1,\n            \"total_input_tokens\": 1,\n            \"total_output_tokens\": 1,\n            \"total_tokens\": 1,\n            \"created_at\": \"2026-06-30T16:00:00Z\",\n            \"updated_at\": \"2026-06-30T16:00:00Z\"\n        }\n    ],\n    \"total\": 1\n}"
+                        }
+                    ]
                 },
                 {
                     "name": "Get Specific Chat",
@@ -627,7 +1198,39 @@
                         },
                         "description": "Retrieve a specific chat session with full message history. Fetches chat metadata and all messages with timestamps and usage data."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "body": {},
+                                "url": {
+                                    "raw": "{{base_url}}/chatbot/chats/{{chat_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "chatbot",
+                                        "chats",
+                                        "{{chat_id}}"
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json",
+                                    "type": "text"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"chat_metadata\": {\n        \"SessionId\": \"string\",\n        \"user_id\": \"string\",\n        \"chat_id\": \"string\",\n        \"title\": \"string\",\n        \"message_count\": 1,\n        \"total_input_tokens\": 1,\n        \"total_output_tokens\": 1,\n        \"total_tokens\": 1,\n        \"created_at\": \"2026-06-30T16:00:00Z\",\n        \"updated_at\": \"2026-06-30T16:00:00Z\"\n    },\n    \"messages\": [\n        {\n            \"role\": \"string\",\n            \"content\": \"string\",\n            \"timestamp\": \"string\",\n            \"usage_metadata\": {\n                \"input_tokens\": 1,\n                \"output_tokens\": 1,\n                \"total_tokens\": 1,\n                \"input_token_details\": {\n                    \"cache_read\": 1,\n                    \"cache_creation\": 1,\n                    \"audio\": 1,\n                    \"text\": 1\n                },\n                \"output_token_details\": {\n                    \"reasoning\": 1,\n                    \"audio\": 1,\n                    \"text\": 1\n                }\n            }\n        }\n    ]\n}"
+                        }
+                    ]
                 },
                 {
                     "name": "Delete Chat",
@@ -647,7 +1250,39 @@
                         },
                         "description": "Delete a specific chat session and all associated messages. Removes chat metadata and all messages from MongoDB."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "DELETE",
+                                "header": [],
+                                "body": {},
+                                "url": {
+                                    "raw": "{{base_url}}/chatbot/chats/{{chat_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "chatbot",
+                                        "chats",
+                                        "{{chat_id}}"
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json",
+                                    "type": "text"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"message\": \"string\",\n    \"chat_id\": \"string\"\n}"
+                        }
+                    ]
                 }
             ],
             "description": "Chatbot endpoints for sending messages, managing chats, and viewing available models"
@@ -679,7 +1314,45 @@
                         },
                         "description": "Get aggregated token usage statistics for all models used in the last 30 days."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "body": {},
+                                "url": {
+                                    "raw": "{{base_url}}/token-usage/summary?days=30",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "token-usage",
+                                        "summary"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "days",
+                                            "value": "30",
+                                            "description": "Number of days to look back"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json",
+                                    "type": "text"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"user_id\": \"string\",\n    \"period_days\": 1,\n    \"start_date\": \"2026-06-30T16:00:00Z\",\n    \"end_date\": \"2026-06-30T16:00:00Z\",\n    \"filter_model\": \"string\",\n    \"models\": [\n        {\n            \"model_name\": \"string\",\n            \"total_input_tokens\": 1,\n            \"total_output_tokens\": 1,\n            \"total_tokens\": 1,\n            \"request_count\": 1,\n            \"first_used\": \"2026-06-30T16:00:00Z\",\n            \"last_used\": \"2026-06-30T16:00:00Z\"\n        }\n    ],\n    \"totals\": {\n        \"total_input_tokens\": 1,\n        \"total_output_tokens\": 1,\n        \"total_tokens\": 1,\n        \"total_requests\": 1\n    }\n}"
+                        }
+                    ]
                 },
                 {
                     "name": "Get Usage Summary - Specific Model",
@@ -710,7 +1383,50 @@
                         },
                         "description": "Get token usage summary for a specific model in the last 7 days."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "body": {},
+                                "url": {
+                                    "raw": "{{base_url}}/token-usage/summary?model_name=gemini-3.1-flash-lite&days=7",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "token-usage",
+                                        "summary"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "model_name",
+                                            "value": "gemini-3.1-flash-lite",
+                                            "description": "Filter by specific model"
+                                        },
+                                        {
+                                            "key": "days",
+                                            "value": "7",
+                                            "description": "Number of days to look back"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json",
+                                    "type": "text"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"user_id\": \"string\",\n    \"period_days\": 1,\n    \"start_date\": \"2026-06-30T16:00:00Z\",\n    \"end_date\": \"2026-06-30T16:00:00Z\",\n    \"filter_model\": \"string\",\n    \"models\": [\n        {\n            \"model_name\": \"string\",\n            \"total_input_tokens\": 1,\n            \"total_output_tokens\": 1,\n            \"total_tokens\": 1,\n            \"request_count\": 1,\n            \"first_used\": \"2026-06-30T16:00:00Z\",\n            \"last_used\": \"2026-06-30T16:00:00Z\"\n        }\n    ],\n    \"totals\": {\n        \"total_input_tokens\": 1,\n        \"total_output_tokens\": 1,\n        \"total_tokens\": 1,\n        \"total_requests\": 1\n    }\n}"
+                        }
+                    ]
                 },
                 {
                     "name": "Get Usage History - All",
@@ -741,7 +1457,50 @@
                         },
                         "description": "Get detailed token usage history with pagination. Returns individual usage records sorted by timestamp."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "body": {},
+                                "url": {
+                                    "raw": "{{base_url}}/token-usage/history?limit=50&skip=0",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "token-usage",
+                                        "history"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "limit",
+                                            "value": "50",
+                                            "description": "Maximum records to return"
+                                        },
+                                        {
+                                            "key": "skip",
+                                            "value": "0",
+                                            "description": "Records to skip for pagination"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json",
+                                    "type": "text"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"user_id\": \"string\",\n    \"total_records\": 1,\n    \"returned_records\": 1,\n    \"skip\": 1,\n    \"limit\": 1,\n    \"records\": [\n        {\n            \"user_id\": \"string\",\n            \"chat_id\": \"string\",\n            \"model_name\": \"string\",\n            \"input_tokens\": 1,\n            \"output_tokens\": 1,\n            \"total_tokens\": 1,\n            \"input_token_details\": {\n                \"cache_read\": 1,\n                \"cache_creation\": 1,\n                \"audio\": 1,\n                \"text\": 1\n            },\n            \"output_token_details\": {\n                \"reasoning\": 1,\n                \"audio\": 1,\n                \"text\": 1\n            },\n            \"timestamp\": \"2026-06-30T16:00:00Z\"\n        }\n    ]\n}"
+                        }
+                    ]
                 },
                 {
                     "name": "Get Usage History - By Model",
@@ -771,7 +1530,49 @@
                         },
                         "description": "Get token usage history filtered by specific model."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "body": {},
+                                "url": {
+                                    "raw": "{{base_url}}/token-usage/history?model_name=gemini-3.1-flash-lite&limit=100",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "token-usage",
+                                        "history"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "model_name",
+                                            "value": "gemini-3.1-flash-lite",
+                                            "description": "Filter by specific model"
+                                        },
+                                        {
+                                            "key": "limit",
+                                            "value": "100"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json",
+                                    "type": "text"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"user_id\": \"string\",\n    \"total_records\": 1,\n    \"returned_records\": 1,\n    \"skip\": 1,\n    \"limit\": 1,\n    \"records\": [\n        {\n            \"user_id\": \"string\",\n            \"chat_id\": \"string\",\n            \"model_name\": \"string\",\n            \"input_tokens\": 1,\n            \"output_tokens\": 1,\n            \"total_tokens\": 1,\n            \"input_token_details\": {\n                \"cache_read\": 1,\n                \"cache_creation\": 1,\n                \"audio\": 1,\n                \"text\": 1\n            },\n            \"output_token_details\": {\n                \"reasoning\": 1,\n                \"audio\": 1,\n                \"text\": 1\n            },\n            \"timestamp\": \"2026-06-30T16:00:00Z\"\n        }\n    ]\n}"
+                        }
+                    ]
                 },
                 {
                     "name": "Get Usage History - By Chat",
@@ -801,7 +1602,49 @@
                         },
                         "description": "Get token usage history for a specific chat session."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "body": {},
+                                "url": {
+                                    "raw": "{{base_url}}/token-usage/history?chat_id={{chat_id}}&limit=100",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "token-usage",
+                                        "history"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "chat_id",
+                                            "value": "{{chat_id}}",
+                                            "description": "Filter by specific chat"
+                                        },
+                                        {
+                                            "key": "limit",
+                                            "value": "100"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json",
+                                    "type": "text"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"user_id\": \"string\",\n    \"total_records\": 1,\n    \"returned_records\": 1,\n    \"skip\": 1,\n    \"limit\": 1,\n    \"records\": [\n        {\n            \"user_id\": \"string\",\n            \"chat_id\": \"string\",\n            \"model_name\": \"string\",\n            \"input_tokens\": 1,\n            \"output_tokens\": 1,\n            \"total_tokens\": 1,\n            \"input_token_details\": {\n                \"cache_read\": 1,\n                \"cache_creation\": 1,\n                \"audio\": 1,\n                \"text\": 1\n            },\n            \"output_token_details\": {\n                \"reasoning\": 1,\n                \"audio\": 1,\n                \"text\": 1\n            },\n            \"timestamp\": \"2026-06-30T16:00:00Z\"\n        }\n    ]\n}"
+                        }
+                    ]
                 },
                 {
                     "name": "Get Chat Token Usage",
@@ -821,7 +1664,39 @@
                         },
                         "description": "Get aggregated token usage for a specific chat session. Shows total tokens used across all models in that chat."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "body": {},
+                                "url": {
+                                    "raw": "{{base_url}}/token-usage/by-chat/{{chat_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "token-usage",
+                                        "by-chat",
+                                        "{{chat_id}}"
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json",
+                                    "type": "text"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"user_id\": \"string\",\n    \"chat_id\": \"string\",\n    \"models\": [\n        {\n            \"model_name\": \"string\",\n            \"total_input_tokens\": 1,\n            \"total_output_tokens\": 1,\n            \"total_tokens\": 1,\n            \"request_count\": 1\n        }\n    ],\n    \"totals\": {\n        \"total_input_tokens\": 1,\n        \"total_output_tokens\": 1,\n        \"total_tokens\": 1,\n        \"total_requests\": 1\n    }\n}"
+                        }
+                    ]
                 },
                 {
                     "name": "Get Used Models",
@@ -840,7 +1715,38 @@
                         },
                         "description": "Get list of all LLM models used by the authenticated user with usage counts and last used dates."
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "body": {},
+                                "url": {
+                                    "raw": "{{base_url}}/token-usage/models",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "token-usage",
+                                        "models"
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json",
+                                    "type": "text"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"user_id\": \"string\",\n    \"models\": [\n        {\n            \"model_name\": \"string\",\n            \"usage_count\": 1,\n            \"last_used\": \"2026-06-30T16:00:00Z\"\n        }\n    ]\n}"
+                        }
+                    ]
                 }
             ],
             "description": "Token usage tracking and analytics endpoints"
@@ -868,7 +1774,38 @@
                                 },
                                 "description": "Get the current logged-in user's profile details."
                             },
-                            "response": []
+                            "response": [
+                                {
+                                    "name": "Successful Response",
+                                    "originalRequest": {
+                                        "method": "GET",
+                                        "header": [],
+                                        "body": {},
+                                        "url": {
+                                            "raw": "{{base_url}}/user_management/me",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "user_management",
+                                                "me"
+                                            ]
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json",
+                                            "type": "text"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "{\n    \"name\": \"string\",\n    \"email\": \"user@example.com\",\n    \"role\": \"string\",\n    \"created_at\": \"2026-06-30T16:00:00Z\",\n    \"is_active\": true\n}"
+                                }
+                            ]
                         },
                         {
                             "name": "Update My Profile - Name",
@@ -896,7 +1833,46 @@
                                 },
                                 "description": "Update the current user's name. Sends confirmation email after update."
                             },
-                            "response": []
+                            "response": [
+                                {
+                                    "name": "Successful Response",
+                                    "originalRequest": {
+                                        "method": "PUT",
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n    \"name\": \"John Smith\"\n}"
+                                        },
+                                        "url": {
+                                            "raw": "{{base_url}}/user_management/me",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "user_management",
+                                                "me"
+                                            ]
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json",
+                                            "type": "text"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "{\n    \"message\": \"string\"\n}"
+                                }
+                            ]
                         },
                         {
                             "name": "Update My Profile - Password",
@@ -924,7 +1900,46 @@
                                 },
                                 "description": "Update the current user's password. Password is automatically hashed and confirmation email is sent."
                             },
-                            "response": []
+                            "response": [
+                                {
+                                    "name": "Successful Response",
+                                    "originalRequest": {
+                                        "method": "PUT",
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n    \"password\": \"NewSecurePassword456!\"\n}"
+                                        },
+                                        "url": {
+                                            "raw": "{{base_url}}/user_management/me",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "user_management",
+                                                "me"
+                                            ]
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json",
+                                            "type": "text"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "{\n    \"message\": \"string\"\n}"
+                                }
+                            ]
                         },
                         {
                             "name": "Update My Profile - Name & Password",
@@ -952,7 +1967,46 @@
                                 },
                                 "description": "Update both name and password simultaneously."
                             },
-                            "response": []
+                            "response": [
+                                {
+                                    "name": "Successful Response",
+                                    "originalRequest": {
+                                        "method": "PUT",
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n    \"name\": \"John Smith\",\n    \"password\": \"NewSecurePassword456!\"\n}"
+                                        },
+                                        "url": {
+                                            "raw": "{{base_url}}/user_management/me",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "user_management",
+                                                "me"
+                                            ]
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json",
+                                            "type": "text"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "{\n    \"message\": \"string\"\n}"
+                                }
+                            ]
                         },
                         {
                             "name": "Delete My Account",
@@ -971,7 +2025,32 @@
                                 },
                                 "description": "Delete the authenticated user's account permanently. Removes user from database and sends confirmation email."
                             },
-                            "response": []
+                            "response": [
+                                {
+                                    "name": "Successful Response",
+                                    "originalRequest": {
+                                        "method": "DELETE",
+                                        "header": [],
+                                        "body": {},
+                                        "url": {
+                                            "raw": "{{base_url}}/user_management/me",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "user_management",
+                                                "me"
+                                            ]
+                                        }
+                                    },
+                                    "status": "No Content",
+                                    "code": 204,
+                                    "_postman_previewlanguage": "text",
+                                    "header": [],
+                                    "cookie": [],
+                                    "body": ""
+                                }
+                            ]
                         }
                     ],
                     "description": "User profile management endpoints"
@@ -997,7 +2076,39 @@
                                 },
                                 "description": "Get the current logged-in admin's profile details."
                             },
-                            "response": []
+                            "response": [
+                                {
+                                    "name": "Successful Response",
+                                    "originalRequest": {
+                                        "method": "GET",
+                                        "header": [],
+                                        "body": {},
+                                        "url": {
+                                            "raw": "{{base_url}}/user_management/admin/me",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "user_management",
+                                                "admin",
+                                                "me"
+                                            ]
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json",
+                                            "type": "text"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "{\n    \"name\": \"string\",\n    \"email\": \"user@example.com\",\n    \"role\": \"string\",\n    \"created_at\": \"2026-06-30T16:00:00Z\",\n    \"is_active\": true\n}"
+                                }
+                            ]
                         },
                         {
                             "name": "Update Admin Profile",
@@ -1026,7 +2137,47 @@
                                 },
                                 "description": "Update the current admin's profile (name or password)."
                             },
-                            "response": []
+                            "response": [
+                                {
+                                    "name": "Successful Response",
+                                    "originalRequest": {
+                                        "method": "PUT",
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n    \"name\": \"Admin User\",\n    \"password\": \"NewAdminPass123!\"\n}"
+                                        },
+                                        "url": {
+                                            "raw": "{{base_url}}/user_management/admin/me",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "user_management",
+                                                "admin",
+                                                "me"
+                                            ]
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json",
+                                            "type": "text"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "{\n    \"message\": \"string\"\n}"
+                                }
+                            ]
                         },
                         {
                             "name": "Delete Admin Account",
@@ -1046,7 +2197,33 @@
                                 },
                                 "description": "Delete the authenticated admin's account permanently."
                             },
-                            "response": []
+                            "response": [
+                                {
+                                    "name": "Successful Response",
+                                    "originalRequest": {
+                                        "method": "DELETE",
+                                        "header": [],
+                                        "body": {},
+                                        "url": {
+                                            "raw": "{{base_url}}/user_management/admin/me",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "user_management",
+                                                "admin",
+                                                "me"
+                                            ]
+                                        }
+                                    },
+                                    "status": "No Content",
+                                    "code": 204,
+                                    "_postman_previewlanguage": "text",
+                                    "header": [],
+                                    "cookie": [],
+                                    "body": ""
+                                }
+                            ]
                         }
                     ],
                     "description": "Admin profile management endpoints"
@@ -1072,7 +2249,39 @@
                                 },
                                 "description": "Get a list of all users (Admin only). Returns all users without password hashes."
                             },
-                            "response": []
+                            "response": [
+                                {
+                                    "name": "Successful Response",
+                                    "originalRequest": {
+                                        "method": "GET",
+                                        "header": [],
+                                        "body": {},
+                                        "url": {
+                                            "raw": "{{base_url}}/user_management/admin/users",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "user_management",
+                                                "admin",
+                                                "users"
+                                            ]
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json",
+                                            "type": "text"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "[\n    {\n        \"user_id\": \"string\",\n        \"name\": \"string\",\n        \"email\": \"user@example.com\",\n        \"role\": \"string\",\n        \"auth_method\": \"string\",\n        \"created_at\": \"2026-06-30T16:00:00Z\",\n        \"is_active\": true,\n        \"is_bounced\": true,\n        \"is_complained\": true,\n        \"chat_count\": 1,\n        \"total_tokens\": 1,\n        \"models_used\": [\n            \"string\"\n        ]\n    }\n]"
+                                }
+                            ]
                         },
                         {
                             "name": "Create User - Student",
@@ -1101,7 +2310,47 @@
                                 },
                                 "description": "Create a new user with student role (Admin only)."
                             },
-                            "response": []
+                            "response": [
+                                {
+                                    "name": "Successful Response",
+                                    "originalRequest": {
+                                        "method": "POST",
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n    \"name\": \"Jane Doe\",\n    \"email\": \"jane@example.com\",\n    \"password\": \"SecurePass123!\",\n    \"role\": \"student\"\n}"
+                                        },
+                                        "url": {
+                                            "raw": "{{base_url}}/user_management/admin/users",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "user_management",
+                                                "admin",
+                                                "users"
+                                            ]
+                                        }
+                                    },
+                                    "status": "Created",
+                                    "code": 201,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json",
+                                            "type": "text"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "{\n    \"user_id\": \"string\",\n    \"name\": \"string\",\n    \"email\": \"user@example.com\",\n    \"role\": \"string\",\n    \"auth_method\": \"string\",\n    \"created_at\": \"2026-06-30T16:00:00Z\",\n    \"is_active\": true,\n    \"is_bounced\": true,\n    \"is_complained\": true,\n    \"chat_count\": 1,\n    \"total_tokens\": 1,\n    \"models_used\": [\n        \"string\"\n    ]\n}"
+                                }
+                            ]
                         },
                         {
                             "name": "Create User - Admin",
@@ -1130,7 +2379,47 @@
                                 },
                                 "description": "Create a new user with admin role (Admin only)."
                             },
-                            "response": []
+                            "response": [
+                                {
+                                    "name": "Successful Response",
+                                    "originalRequest": {
+                                        "method": "POST",
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n    \"name\": \"Admin User\",\n    \"email\": \"admin@example.com\",\n    \"password\": \"AdminPass123!\",\n    \"role\": \"admin\"\n}"
+                                        },
+                                        "url": {
+                                            "raw": "{{base_url}}/user_management/admin/users",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "user_management",
+                                                "admin",
+                                                "users"
+                                            ]
+                                        }
+                                    },
+                                    "status": "Created",
+                                    "code": 201,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json",
+                                            "type": "text"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "{\n    \"user_id\": \"string\",\n    \"name\": \"string\",\n    \"email\": \"user@example.com\",\n    \"role\": \"string\",\n    \"auth_method\": \"string\",\n    \"created_at\": \"2026-06-30T16:00:00Z\",\n    \"is_active\": true,\n    \"is_bounced\": true,\n    \"is_complained\": true,\n    \"chat_count\": 1,\n    \"total_tokens\": 1,\n    \"models_used\": [\n        \"string\"\n    ]\n}"
+                                }
+                            ]
                         },
                         {
                             "name": "Delete User",
@@ -1159,7 +2448,41 @@
                                 },
                                 "description": "Delete a user by email (Admin only)."
                             },
-                            "response": []
+                            "response": [
+                                {
+                                    "name": "Successful Response",
+                                    "originalRequest": {
+                                        "method": "DELETE",
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n    \"email\": \"user@example.com\"\n}"
+                                        },
+                                        "url": {
+                                            "raw": "{{base_url}}/user_management/admin/users",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "user_management",
+                                                "admin",
+                                                "users"
+                                            ]
+                                        }
+                                    },
+                                    "status": "No Content",
+                                    "code": 204,
+                                    "_postman_previewlanguage": "text",
+                                    "header": [],
+                                    "cookie": [],
+                                    "body": ""
+                                }
+                            ]
                         }
                     ],
                     "description": "Admin-only user management endpoints"
@@ -1197,7 +2520,51 @@
                                 },
                                 "description": "Get a global list of all messages from all users (Admin only). Sorted by latest message first."
                             },
-                            "response": []
+                            "response": [
+                                {
+                                    "name": "Successful Response",
+                                    "originalRequest": {
+                                        "method": "GET",
+                                        "header": [],
+                                        "body": {},
+                                        "url": {
+                                            "raw": "{{base_url}}/user_management/admin/all_messages?skip=0&limit=50",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "user_management",
+                                                "admin",
+                                                "all_messages"
+                                            ],
+                                            "query": [
+                                                {
+                                                    "key": "skip",
+                                                    "value": "0",
+                                                    "description": "Number of records to skip (pagination)"
+                                                },
+                                                {
+                                                    "key": "limit",
+                                                    "value": "50",
+                                                    "description": "Max number of records to return"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json",
+                                            "type": "text"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "[\n    {\n        \"user_id\": \"string\",\n        \"user_name\": \"string\",\n        \"user_email\": \"string\",\n        \"input_message\": \"string\",\n        \"ai_response\": \"string\",\n        \"timestamp\": \"2026-06-30T16:00:00Z\",\n        \"chat_id\": \"string\",\n        \"session_id\": \"string\",\n        \"model_name\": \"string\",\n        \"deleted\": true,\n        \"deleted_at\": \"2026-06-30T16:00:00Z\"\n    }\n]"
+                                }
+                            ]
                         },
                         {
                             "name": "Get All Messages (Include Deleted)",
@@ -1232,7 +2599,54 @@
                                 },
                                 "description": "Get all messages including deleted ones (Admin only)."
                             },
-                            "response": []
+                            "response": [
+                                {
+                                    "name": "Successful Response",
+                                    "originalRequest": {
+                                        "method": "GET",
+                                        "header": [],
+                                        "body": {},
+                                        "url": {
+                                            "raw": "{{base_url}}/user_management/admin/all_messages?include_deleted=true&skip=0&limit=50",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "user_management",
+                                                "admin",
+                                                "all_messages"
+                                            ],
+                                            "query": [
+                                                {
+                                                    "key": "include_deleted",
+                                                    "value": "true",
+                                                    "description": "Include all messages (both deleted and active)"
+                                                },
+                                                {
+                                                    "key": "skip",
+                                                    "value": "0"
+                                                },
+                                                {
+                                                    "key": "limit",
+                                                    "value": "50"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json",
+                                            "type": "text"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "[\n    {\n        \"user_id\": \"string\",\n        \"user_name\": \"string\",\n        \"user_email\": \"string\",\n        \"input_message\": \"string\",\n        \"ai_response\": \"string\",\n        \"timestamp\": \"2026-06-30T16:00:00Z\",\n        \"chat_id\": \"string\",\n        \"session_id\": \"string\",\n        \"model_name\": \"string\",\n        \"deleted\": true,\n        \"deleted_at\": \"2026-06-30T16:00:00Z\"\n    }\n]"
+                                }
+                            ]
                         },
                         {
                             "name": "Get Deleted Messages Only",
@@ -1267,7 +2681,54 @@
                                 },
                                 "description": "Get only deleted messages from chats that users have deleted (Admin only)."
                             },
-                            "response": []
+                            "response": [
+                                {
+                                    "name": "Successful Response",
+                                    "originalRequest": {
+                                        "method": "GET",
+                                        "header": [],
+                                        "body": {},
+                                        "url": {
+                                            "raw": "{{base_url}}/user_management/admin/all_messages?deleted_only=true&skip=0&limit=50",
+                                            "host": [
+                                                "{{base_url}}"
+                                            ],
+                                            "path": [
+                                                "user_management",
+                                                "admin",
+                                                "all_messages"
+                                            ],
+                                            "query": [
+                                                {
+                                                    "key": "deleted_only",
+                                                    "value": "true",
+                                                    "description": "Return only deleted messages"
+                                                },
+                                                {
+                                                    "key": "skip",
+                                                    "value": "0"
+                                                },
+                                                {
+                                                    "key": "limit",
+                                                    "value": "50"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json",
+                                            "type": "text"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "[\n    {\n        \"user_id\": \"string\",\n        \"user_name\": \"string\",\n        \"user_email\": \"string\",\n        \"input_message\": \"string\",\n        \"ai_response\": \"string\",\n        \"timestamp\": \"2026-06-30T16:00:00Z\",\n        \"chat_id\": \"string\",\n        \"session_id\": \"string\",\n        \"model_name\": \"string\",\n        \"deleted\": true,\n        \"deleted_at\": \"2026-06-30T16:00:00Z\"\n    }\n]"
+                                }
+                            ]
                         }
                     ],
                     "description": "Admin message feed endpoints with filtering options"
