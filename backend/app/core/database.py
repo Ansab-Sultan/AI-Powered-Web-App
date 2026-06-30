@@ -95,7 +95,7 @@ class AsyncMongoDBChatMessageHistory(BaseChatMessageHistory):
         item = {
             "type": message.type,
             "data": {
-                "content": message.content,
+                "content": extract_message_text(message.content),
                 "timestamp": datetime.utcnow().isoformat(),
             }
         }
@@ -129,3 +129,29 @@ async def get_message_history(session_id: str) -> AsyncMongoDBChatMessageHistory
         session_id=session_id,
         collection=db_client.get_chats_collection()
     )
+
+
+def extract_message_text(content) -> str:
+    """Safely extract string text from a LangChain message content.
+
+    Message content can be a string, a list of strings/dicts, or a dictionary.
+    """
+    if isinstance(content, str):
+        return content
+    elif isinstance(content, list):
+        text_parts = []
+        for part in content:
+            if isinstance(part, str):
+                text_parts.append(part)
+            elif isinstance(part, dict):
+                if "text" in part:
+                    text_parts.append(part["text"])
+        return "".join(text_parts)
+    elif isinstance(content, dict):
+        if "text" in content:
+            return content["text"]
+        return str(content)
+    elif content is None:
+        return ""
+    else:
+        return str(content)

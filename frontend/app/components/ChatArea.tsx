@@ -9,9 +9,16 @@ interface ChatAreaProps {
   onChatCreated: (chatId: string) => void;
   selectedModel: string;
   onModelChange: (model: string) => void;
+  newChatTrigger?: number;
 }
 
-export default function ChatArea({ chatId, onChatCreated, selectedModel, onModelChange }: ChatAreaProps) {
+export default function ChatArea({
+  chatId,
+  onChatCreated,
+  selectedModel,
+  onModelChange,
+  newChatTrigger,
+}: ChatAreaProps) {
   const [messages, setMessages] = useState<MessageItem[]>([]);
   const [metadata, setMetadata] = useState<ChatMetadata | null>(null);
   const [input, setInput] = useState<string>("");
@@ -33,6 +40,7 @@ export default function ChatArea({ chatId, onChatCreated, selectedModel, onModel
     if (!chatId) {
       setMessages([]);
       setMetadata(null);
+      setInput("");
       return;
     }
     setFetchingHistory(true);
@@ -58,7 +66,7 @@ export default function ChatArea({ chatId, onChatCreated, selectedModel, onModel
 
   useEffect(() => {
     fetchHistory();
-  }, [chatId]);
+  }, [chatId, newChatTrigger]);
 
   useEffect(() => {
     fetchModels();

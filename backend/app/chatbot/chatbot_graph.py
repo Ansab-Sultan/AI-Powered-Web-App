@@ -134,8 +134,10 @@ async def save_history_node(
         }
 
     if len(messages) >= 2:
-        user_message = messages[-2].content
-        assistant_message = messages[-1].content
+        from app.core.database import extract_message_text
+
+        user_message = extract_message_text(messages[-2].content)
+        assistant_message = extract_message_text(messages[-1].content)
 
         result = await save_chat_messages.ainvoke(
             {

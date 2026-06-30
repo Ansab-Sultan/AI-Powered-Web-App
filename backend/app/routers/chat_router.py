@@ -56,8 +56,9 @@ async def chat_endpoint(
 
     assistant_response = None
     if result["messages"]:
+        from app.core.database import extract_message_text
         assistant_message = result["messages"][-1]
-        assistant_response = assistant_message.content
+        assistant_response = extract_message_text(assistant_message.content)
 
     chat_id = result.get("chat_id")
     usage_metadata = result.get("usage_metadata")
@@ -156,9 +157,10 @@ async def get_specific_chat(
         msg_data = msg.get("data", {})
         msg_type = msg.get("type", "")
         
+        from app.core.database import extract_message_text
         formatted_msg = {
             "role": "user" if msg_type == "human" else "assistant",
-            "content": msg_data.get("content", ""),
+            "content": extract_message_text(msg_data.get("content", "")),
             "timestamp": msg_data.get("timestamp"),
         }
         

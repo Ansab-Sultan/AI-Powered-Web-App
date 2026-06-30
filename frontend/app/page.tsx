@@ -14,6 +14,7 @@ export default function Home() {
   const [activeView, setActiveView] = useState<"chat" | "dashboard">("chat");
   const [dashboardTab, setDashboardTab] = useState<"analytics" | "settings">("analytics");
   const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
+  const [newChatTrigger, setNewChatTrigger] = useState<number>(0);
 
   if (isLoading) {
     return (
@@ -37,11 +38,18 @@ export default function Home() {
     }
   };
 
+  const handleSelectChat = (chatId: string | null) => {
+    setActiveChatId(chatId);
+    if (chatId === null) {
+      setNewChatTrigger((prev) => prev + 1);
+    }
+  };
+
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-slate-50">
       <Sidebar
         activeChatId={activeChatId}
-        onSelectChat={setActiveChatId}
+        onSelectChat={handleSelectChat}
         showDashboard={activeView === "dashboard"}
         onToggleDashboard={handleToggleDashboard}
         onLogout={logout}
@@ -64,6 +72,7 @@ export default function Home() {
             }}
             selectedModel={selectedModel}
             onModelChange={setSelectedModel}
+            newChatTrigger={newChatTrigger}
           />
         )}
       </main>
