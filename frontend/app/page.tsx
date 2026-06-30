@@ -15,6 +15,7 @@ export default function Home() {
   const [dashboardTab, setDashboardTab] = useState<"analytics" | "settings">("analytics");
   const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
   const [newChatTrigger, setNewChatTrigger] = useState<number>(0);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 
   if (isLoading) {
     return (
@@ -46,14 +47,29 @@ export default function Home() {
   };
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-50">
+    <div className="flex h-screen w-screen overflow-hidden bg-slate-50 relative">
+      {isSidebarOpen && (
+        <div
+          onClick={() => setIsSidebarOpen(false)}
+          className="fixed inset-0 z-40 bg-zinc-950/20 backdrop-blur-sm lg:hidden transition-all duration-300 animate-fade-in"
+        />
+      )}
+
       <Sidebar
         activeChatId={activeChatId}
-        onSelectChat={handleSelectChat}
+        onSelectChat={(chatId) => {
+          handleSelectChat(chatId);
+          setIsSidebarOpen(false);
+        }}
         showDashboard={activeView === "dashboard"}
-        onToggleDashboard={handleToggleDashboard}
+        onToggleDashboard={(show, tab) => {
+          handleToggleDashboard(show, tab);
+          setIsSidebarOpen(false);
+        }}
         onLogout={logout}
         refreshTrigger={refreshTrigger}
+        isMobileOpen={isSidebarOpen}
+        onCloseMobile={() => setIsSidebarOpen(false)}
       />
 
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
@@ -62,6 +78,7 @@ export default function Home() {
             activeTab={dashboardTab}
             setActiveTab={setDashboardTab}
             onClose={() => setActiveView("chat")}
+            onOpenSidebar={() => setIsSidebarOpen(true)}
           />
         ) : (
           <ChatArea
@@ -73,6 +90,7 @@ export default function Home() {
             selectedModel={selectedModel}
             onModelChange={setSelectedModel}
             newChatTrigger={newChatTrigger}
+            onOpenSidebar={() => setIsSidebarOpen(true)}
           />
         )}
       </main>

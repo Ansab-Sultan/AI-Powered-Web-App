@@ -3,15 +3,14 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_groq import ChatGroq
 from app.core.config import settings
 
-GOOGLE_MODELS = ["gemini-3.1-flash-lite", "gemini-3-flash-preview"]
+GOOGLE_MODELS = [
+    "gemini-3.5-flash",
+    "gemini-3.1-pro",
+    "gemini-3.1-flash-lite",
+]
 GROQ_MODELS = [
     "llama-3.3-70b-versatile",
     "llama-3.1-8b-instant",
-    "llama-3.2-1b-preview",
-    "llama-3.2-3b-preview",
-    "llama-3.2-11b-vision-preview",
-    "llama-3.2-90b-vision-preview",
-    "mixtral-8x7b-32768",
     "gemma2-9b-it",
 ]
 

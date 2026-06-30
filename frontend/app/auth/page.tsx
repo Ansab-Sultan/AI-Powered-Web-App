@@ -144,43 +144,56 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm transition-all duration-300 animate-fade-in">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-tr from-slate-50 via-zinc-50 to-neutral-50 px-4 py-12 sm:px-6 lg:px-8">
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none opacity-40">
+        <div className="absolute top-[20%] left-[10%] h-[30vw] w-[30vw] rounded-full bg-indigo-200/40 blur-[120px]" />
+        <div className="absolute bottom-[20%] right-[10%] h-[30vw] w-[30vw] rounded-full bg-violet-200/30 blur-[120px]" />
+      </div>
+
+      <div className="relative z-10 w-full max-w-md space-y-6 rounded-2xl border border-zinc-200/80 bg-white/90 p-8 shadow-[0_1px_2px_rgba(0,0,0,0.02),0_8px_32px_rgba(0,0,0,0.04)] backdrop-blur-md transition-all duration-300 animate-slide-up-fade">
         <div className="flex flex-col items-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-200">
-            <Sparkles className="h-6 w-6" />
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-md shadow-indigo-200 hover:scale-105 active:scale-95 transition-all">
+            <Sparkles className="h-5 w-5" />
           </div>
-          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-slate-900">
+          <h2 className="mt-5 text-center text-2xl font-bold tracking-tight text-zinc-900">
             {mode === "login" && "Welcome back"}
             {mode === "signup" && "Create your account"}
             {mode === "forgot" && "Reset your password"}
           </h2>
-          <p className="mt-2 text-center text-sm text-slate-500">
+          <p className="mt-1.5 text-center text-xs text-zinc-500 font-medium">
             {mode === "login" && "Sign in to access your chat workspace"}
             {mode === "signup" && `Step ${step} of 3: ${step === 1 ? "Verify Email" : step === 2 ? "Enter OTP Code" : "Account Setup"}`}
             {mode === "forgot" && `Step ${step} of 2: ${step === 1 ? "Enter Email" : "Enter Verification OTP"}`}
           </p>
         </div>
 
+        {mode === "signup" && (
+          <div className="flex items-center justify-center gap-1.5 pt-1">
+            <div className={`h-1.5 w-10 rounded-full transition-all duration-300 ${step >= 1 ? "bg-indigo-600" : "bg-zinc-150"}`} />
+            <div className={`h-1.5 w-10 rounded-full transition-all duration-300 ${step >= 2 ? "bg-indigo-600" : "bg-zinc-200"}`} />
+            <div className={`h-1.5 w-10 rounded-full transition-all duration-300 ${step >= 3 ? "bg-indigo-600" : "bg-zinc-200"}`} />
+          </div>
+        )}
+
         {(error || authError) && (
-          <div className="rounded-lg bg-red-50 p-4 border border-red-100">
-            <p className="text-sm text-red-700 font-medium">{error || authError}</p>
+          <div className="rounded-xl bg-rose-50/50 p-3.5 border border-rose-100 animate-fade-in">
+            <p className="text-xs text-rose-700 font-semibold leading-relaxed">{error || authError}</p>
           </div>
         )}
 
         {successMessage && (
-          <div className="rounded-lg bg-indigo-50 p-4 border border-indigo-100">
-            <p className="text-sm text-indigo-700 font-medium">{successMessage}</p>
+          <div className="rounded-xl bg-indigo-50/50 p-3.5 border border-indigo-100 animate-fade-in">
+            <p className="text-xs text-indigo-700 font-semibold leading-relaxed">{successMessage}</p>
           </div>
         )}
 
         {mode === "login" && (
-          <form className="mt-8 space-y-6" onSubmit={handleLogin}>
-            <div className="space-y-4 rounded-md">
-              <div>
-                <label className="text-sm font-semibold text-slate-700">Email Address</label>
-                <div className="relative mt-1">
-                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+          <form className="space-y-5" onSubmit={handleLogin}>
+            <div className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">Email Address</label>
+                <div className="relative">
+                  <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-400">
                     <Mail className="h-4 w-4" />
                   </span>
                   <input
@@ -189,24 +202,24 @@ export default function AuthPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"
-                    className="block w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-3 text-sm text-slate-900 outline-none transition-all focus:border-indigo-600 focus:bg-white focus:ring-1 focus:ring-indigo-600"
+                    className="block w-full rounded-xl border border-zinc-200 bg-zinc-50/50 py-2.5 pl-10 pr-3 text-sm text-zinc-900 outline-none transition-all focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-100"
                   />
                 </div>
               </div>
 
-              <div>
+              <div className="space-y-1.5">
                 <div className="flex justify-between items-center">
-                  <label className="text-sm font-semibold text-slate-700">Password</label>
+                  <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">Password</label>
                   <button
                     type="button"
                     onClick={() => switchMode("forgot")}
-                    className="text-xs font-semibold text-indigo-600 hover:text-indigo-500"
+                    className="text-xs font-bold text-indigo-600 hover:text-indigo-500"
                   >
-                    Forgot password?
+                    Forgot?
                   </button>
                 </div>
-                <div className="relative mt-1">
-                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                <div className="relative">
+                  <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-400">
                     <Lock className="h-4 w-4" />
                   </span>
                   <input
@@ -215,7 +228,7 @@ export default function AuthPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="block w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-3 text-sm text-slate-900 outline-none transition-all focus:border-indigo-600 focus:bg-white focus:ring-1 focus:ring-indigo-600"
+                    className="block w-full rounded-xl border border-zinc-200 bg-zinc-50/50 py-2.5 pl-10 pr-3 text-sm text-zinc-900 outline-none transition-all focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-100"
                   />
                 </div>
               </div>
@@ -225,17 +238,17 @@ export default function AuthPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="group relative flex w-full justify-center rounded-lg bg-indigo-600 py-2.5 px-4 text-sm font-semibold text-white transition-all hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
+                className="group relative flex w-full justify-center items-center rounded-xl bg-indigo-600 py-3 px-4 text-sm font-semibold text-white transition-all hover:bg-indigo-500 active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-indigo-100 hover:shadow-lg"
               >
-                {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : "Sign In"}
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Sign In"}
               </button>
             </div>
 
-            <div className="text-center">
+            <div className="text-center pt-2">
               <button
                 type="button"
                 onClick={() => switchMode("signup")}
-                className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                className="text-xs font-bold text-zinc-500 hover:text-indigo-600"
               >
                 Don't have an account? Sign up
               </button>
@@ -244,13 +257,13 @@ export default function AuthPage() {
         )}
 
         {mode === "signup" && (
-          <div className="mt-8">
+          <div className="space-y-4">
             {step === 1 && (
-              <form onSubmit={handleSendOtp} className="space-y-6">
-                <div>
-                  <label className="text-sm font-semibold text-slate-700">Verify Email Address</label>
-                  <div className="relative mt-1">
-                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+              <form onSubmit={handleSendOtp} className="space-y-5">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">Verify Email Address</label>
+                  <div className="relative">
+                    <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-400">
                       <Mail className="h-4 w-4" />
                     </span>
                     <input
@@ -259,7 +272,7 @@ export default function AuthPage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="you@example.com"
-                      className="block w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-3 text-sm text-slate-900 outline-none transition-all focus:border-indigo-600 focus:bg-white focus:ring-1 focus:ring-indigo-600"
+                      className="block w-full rounded-xl border border-zinc-200 bg-zinc-50/50 py-2.5 pl-10 pr-3 text-sm text-zinc-900 outline-none transition-all focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-100"
                     />
                   </div>
                 </div>
@@ -268,30 +281,30 @@ export default function AuthPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="group relative flex w-full justify-center rounded-lg bg-indigo-600 py-2.5 px-4 text-sm font-semibold text-white transition-all hover:bg-indigo-500 disabled:opacity-50"
+                    className="group relative flex w-full justify-center items-center rounded-xl bg-indigo-600 py-3 px-4 text-sm font-semibold text-white transition-all hover:bg-indigo-500 active:scale-98 disabled:opacity-50 shadow-md"
                   >
-                    {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : "Send Verification Code"}
+                    {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Send Verification Code"}
                   </button>
                 </div>
 
-                <div className="text-center">
+                <div className="text-center pt-2">
                   <button
                     type="button"
                     onClick={() => switchMode("login")}
-                    className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-800"
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-zinc-500 hover:text-zinc-800"
                   >
-                    <ArrowLeft className="h-4 w-4" /> Back to sign in
+                    <ArrowLeft className="h-3.5 w-3.5" /> Back to sign in
                   </button>
                 </div>
               </form>
             )}
 
             {step === 2 && (
-              <div className="space-y-6">
-                <div>
-                  <label className="text-sm font-semibold text-slate-700">One-Time Password (OTP)</label>
-                  <div className="relative mt-1">
-                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+              <div className="space-y-5">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">One-Time Password (OTP)</label>
+                  <div className="relative">
+                    <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-400">
                       <KeyRound className="h-4 w-4" />
                     </span>
                     <input
@@ -301,7 +314,7 @@ export default function AuthPage() {
                       value={otp}
                       onChange={(e) => setOtp(e.target.value)}
                       placeholder="Enter 6-digit code"
-                      className="block w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-3 text-sm text-slate-900 outline-none transition-all focus:border-indigo-600 focus:bg-white focus:ring-1 focus:ring-indigo-600 tracking-widest text-center font-bold"
+                      className="block w-full rounded-xl border border-zinc-200 bg-zinc-50/50 py-2.5 pl-10 pr-3 text-sm text-zinc-900 outline-none transition-all focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-100 tracking-[0.25em] text-center font-black"
                     />
                   </div>
                 </div>
@@ -311,31 +324,31 @@ export default function AuthPage() {
                     type="button"
                     onClick={() => setStep(3)}
                     disabled={!otp}
-                    className="group relative flex w-full justify-center rounded-lg bg-indigo-600 py-2.5 px-4 text-sm font-semibold text-white transition-all hover:bg-indigo-500 disabled:opacity-50"
+                    className="group relative flex w-full justify-center items-center rounded-xl bg-indigo-600 py-3 px-4 text-sm font-semibold text-white transition-all hover:bg-indigo-500 active:scale-98 disabled:opacity-50 shadow-md"
                   >
                     Continue to Profile Setup
                   </button>
                 </div>
 
-                <div className="text-center">
+                <div className="text-center pt-2">
                   <button
                     type="button"
                     onClick={() => setStep(1)}
-                    className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-800"
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-zinc-500 hover:text-zinc-800"
                   >
-                    <ArrowLeft className="h-4 w-4" /> Change email
+                    <ArrowLeft className="h-3.5 w-3.5" /> Change email
                   </button>
                 </div>
               </div>
             )}
 
             {step === 3 && (
-              <form onSubmit={handleCompleteSignup} className="space-y-6">
+              <form onSubmit={handleCompleteSignup} className="space-y-5">
                 <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-semibold text-slate-700">Full Name</label>
-                    <div className="relative mt-1">
-                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">Full Name</label>
+                    <div className="relative">
+                      <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-400">
                         <User className="h-4 w-4" />
                       </span>
                       <input
@@ -344,15 +357,15 @@ export default function AuthPage() {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="John Doe"
-                        className="block w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-3 text-sm text-slate-900 outline-none transition-all focus:border-indigo-600 focus:bg-white focus:ring-1 focus:ring-indigo-600"
+                        className="block w-full rounded-xl border border-zinc-200 bg-zinc-50/50 py-2.5 pl-10 pr-3 text-sm text-zinc-900 outline-none transition-all focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-100"
                       />
                     </div>
                   </div>
 
-                  <div>
-                    <label className="text-sm font-semibold text-slate-700">Password</label>
-                    <div className="relative mt-1">
-                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">Password</label>
+                    <div className="relative">
+                      <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-400">
                         <Lock className="h-4 w-4" />
                       </span>
                       <input
@@ -361,15 +374,15 @@ export default function AuthPage() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="••••••••"
-                        className="block w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-3 text-sm text-slate-900 outline-none transition-all focus:border-indigo-600 focus:bg-white focus:ring-1 focus:ring-indigo-600"
+                        className="block w-full rounded-xl border border-zinc-200 bg-zinc-50/50 py-2.5 pl-10 pr-3 text-sm text-zinc-900 outline-none transition-all focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-100"
                       />
                     </div>
                   </div>
 
-                  <div>
-                    <label className="text-sm font-semibold text-slate-700">Confirm Password</label>
-                    <div className="relative mt-1">
-                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">Confirm Password</label>
+                    <div className="relative">
+                      <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-400">
                         <Lock className="h-4 w-4" />
                       </span>
                       <input
@@ -378,7 +391,7 @@ export default function AuthPage() {
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         placeholder="••••••••"
-                        className="block w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-3 text-sm text-slate-900 outline-none transition-all focus:border-indigo-600 focus:bg-white focus:ring-1 focus:ring-indigo-600"
+                        className="block w-full rounded-xl border border-zinc-200 bg-zinc-50/50 py-2.5 pl-10 pr-3 text-sm text-zinc-900 outline-none transition-all focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-100"
                       />
                     </div>
                   </div>
@@ -388,19 +401,19 @@ export default function AuthPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="group relative flex w-full justify-center rounded-lg bg-indigo-600 py-2.5 px-4 text-sm font-semibold text-white transition-all hover:bg-indigo-500 disabled:opacity-50"
+                    className="group relative flex w-full justify-center items-center rounded-xl bg-indigo-600 py-3 px-4 text-sm font-semibold text-white transition-all hover:bg-indigo-500 active:scale-98 disabled:opacity-50 shadow-md"
                   >
-                    {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : "Complete Account Registration"}
+                    {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Complete Registration"}
                   </button>
                 </div>
 
-                <div className="text-center">
+                <div className="text-center pt-2">
                   <button
                     type="button"
                     onClick={() => setStep(2)}
-                    className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-800"
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-zinc-500 hover:text-zinc-800"
                   >
-                    <ArrowLeft className="h-4 w-4" /> Back to OTP Verification
+                    <ArrowLeft className="h-3.5 w-3.5" /> Back to OTP Code
                   </button>
                 </div>
               </form>
@@ -409,13 +422,13 @@ export default function AuthPage() {
         )}
 
         {mode === "forgot" && (
-          <div className="mt-8">
+          <div className="space-y-4">
             {step === 1 && (
-              <form onSubmit={handleForgotPasswordRequest} className="space-y-6">
-                <div>
-                  <label className="text-sm font-semibold text-slate-700">Registered Email Address</label>
-                  <div className="relative mt-1">
-                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+              <form onSubmit={handleForgotPasswordRequest} className="space-y-5">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">Registered Email</label>
+                  <div className="relative">
+                    <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-400">
                       <Mail className="h-4 w-4" />
                     </span>
                     <input
@@ -424,7 +437,7 @@ export default function AuthPage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="you@example.com"
-                      className="block w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-3 text-sm text-slate-900 outline-none transition-all focus:border-indigo-600 focus:bg-white focus:ring-1 focus:ring-indigo-600"
+                      className="block w-full rounded-xl border border-zinc-200 bg-zinc-50/50 py-2.5 pl-10 pr-3 text-sm text-zinc-900 outline-none transition-all focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-100"
                     />
                   </div>
                 </div>
@@ -433,31 +446,31 @@ export default function AuthPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="group relative flex w-full justify-center rounded-lg bg-indigo-600 py-2.5 px-4 text-sm font-semibold text-white transition-all hover:bg-indigo-500 disabled:opacity-50"
+                    className="group relative flex w-full justify-center items-center rounded-xl bg-indigo-600 py-3 px-4 text-sm font-semibold text-white transition-all hover:bg-indigo-500 active:scale-98 disabled:opacity-50 shadow-md"
                   >
-                    {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : "Send Password Reset OTP"}
+                    {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Send Reset Code"}
                   </button>
                 </div>
 
-                <div className="text-center">
+                <div className="text-center pt-2">
                   <button
                     type="button"
                     onClick={() => switchMode("login")}
-                    className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-800"
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-zinc-500 hover:text-zinc-800"
                   >
-                    <ArrowLeft className="h-4 w-4" /> Back to sign in
+                    <ArrowLeft className="h-3.5 w-3.5" /> Back to sign in
                   </button>
                 </div>
               </form>
             )}
 
             {step === 2 && (
-              <form onSubmit={handleForgotPasswordVerify} className="space-y-6">
+              <form onSubmit={handleForgotPasswordVerify} className="space-y-5">
                 <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-semibold text-slate-700">Verification OTP</label>
-                    <div className="relative mt-1">
-                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">Verification OTP</label>
+                    <div className="relative">
+                      <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-400">
                         <KeyRound className="h-4 w-4" />
                       </span>
                       <input
@@ -467,15 +480,15 @@ export default function AuthPage() {
                         value={otp}
                         onChange={(e) => setOtp(e.target.value)}
                         placeholder="Enter 6-digit code"
-                        className="block w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-3 text-sm text-slate-900 outline-none transition-all focus:border-indigo-600 focus:bg-white focus:ring-1 focus:ring-indigo-600 tracking-widest text-center font-bold"
+                        className="block w-full rounded-xl border border-zinc-200 bg-zinc-50/50 py-2.5 pl-10 pr-3 text-sm text-zinc-900 outline-none transition-all focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-100 tracking-[0.25em] text-center font-black"
                       />
                     </div>
                   </div>
 
-                  <div>
-                    <label className="text-sm font-semibold text-slate-700">New Password</label>
-                    <div className="relative mt-1">
-                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">New Password</label>
+                    <div className="relative">
+                      <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-400">
                         <Lock className="h-4 w-4" />
                       </span>
                       <input
@@ -484,15 +497,15 @@ export default function AuthPage() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="••••••••"
-                        className="block w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-3 text-sm text-slate-900 outline-none transition-all focus:border-indigo-600 focus:bg-white focus:ring-1 focus:ring-indigo-600"
+                        className="block w-full rounded-xl border border-zinc-200 bg-zinc-50/50 py-2.5 pl-10 pr-3 text-sm text-zinc-900 outline-none transition-all focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-100"
                       />
                     </div>
                   </div>
 
-                  <div>
-                    <label className="text-sm font-semibold text-slate-700">Confirm New Password</label>
-                    <div className="relative mt-1">
-                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-zinc-700 uppercase tracking-wider">Confirm New Password</label>
+                    <div className="relative">
+                      <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-400">
                         <Lock className="h-4 w-4" />
                       </span>
                       <input
@@ -501,7 +514,7 @@ export default function AuthPage() {
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         placeholder="••••••••"
-                        className="block w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-3 text-sm text-slate-900 outline-none transition-all focus:border-indigo-600 focus:bg-white focus:ring-1 focus:ring-indigo-600"
+                        className="block w-full rounded-xl border border-zinc-200 bg-zinc-50/50 py-2.5 pl-10 pr-3 text-sm text-zinc-900 outline-none transition-all focus:border-indigo-600 focus:bg-white focus:ring-4 focus:ring-indigo-100"
                       />
                     </div>
                   </div>
@@ -511,19 +524,19 @@ export default function AuthPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="group relative flex w-full justify-center rounded-lg bg-indigo-600 py-2.5 px-4 text-sm font-semibold text-white transition-all hover:bg-indigo-500 disabled:opacity-50"
+                    className="group relative flex w-full justify-center items-center rounded-xl bg-indigo-600 py-3 px-4 text-sm font-semibold text-white transition-all hover:bg-indigo-500 active:scale-98 disabled:opacity-50 shadow-md"
                   >
-                    {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : "Reset Password"}
+                    {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Reset Password"}
                   </button>
                 </div>
 
-                <div className="text-center">
+                <div className="text-center pt-2">
                   <button
                     type="button"
                     onClick={() => setStep(1)}
-                    className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-800"
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-zinc-500 hover:text-zinc-800"
                   >
-                    <ArrowLeft className="h-4 w-4" /> Back to Email
+                    <ArrowLeft className="h-3.5 w-3.5" /> Back to Email
                   </button>
                 </div>
               </form>
