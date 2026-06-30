@@ -285,7 +285,7 @@ export default function ChatArea({ chatId, onChatCreated, selectedModel, onModel
             {messages.map((msg, index) => {
               const isUser = msg.role === "user";
               return (
-                <div key={index} className={`flex gap-4 ${isUser ? "justify-end" : "justify-start"}`}>
+                <div key={index} className={`flex gap-4 ${isUser ? "justify-end" : "justify-start"} animate-slide-up-fade`}>
                   {!isUser && (
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-100">
                       <Cpu className="h-4.5 w-4.5" />
@@ -370,7 +370,7 @@ export default function ChatArea({ chatId, onChatCreated, selectedModel, onModel
               </button>
 
               {modelDropdownOpen && (
-                <div className="absolute bottom-full left-0 z-50 mb-2 w-52 rounded-xl border border-slate-200 bg-white p-1 shadow-lg max-h-48 overflow-y-auto">
+                <div className="absolute bottom-full left-0 z-50 mb-2 w-52 rounded-xl border border-slate-200 bg-white p-1 shadow-lg max-h-48 overflow-y-auto animate-slide-up-fade">
                   {models.map((model) => (
                     <button
                       key={model}

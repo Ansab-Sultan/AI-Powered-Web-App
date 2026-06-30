@@ -117,7 +117,7 @@ export default function DashboardView({ activeTab, setActiveTab, onClose }: Dash
   };
 
   return (
-    <div className="flex-1 overflow-y-auto bg-slate-50/50 p-8 h-screen">
+    <div className="flex-1 overflow-y-auto bg-slate-50/50 p-8 h-screen animate-fade-in">
       <header className="flex flex-col gap-4 border-b border-slate-200 bg-white p-6 rounded-2xl shadow-sm mb-6">
         <div className="flex items-center gap-3">
           <button
@@ -160,7 +160,7 @@ export default function DashboardView({ activeTab, setActiveTab, onClose }: Dash
       </header>
 
       {activeTab === "analytics" && (
-        <div className="space-y-6">
+        <div className="space-y-6 animate-slide-in-right">
           <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4 text-slate-400" />
@@ -202,7 +202,7 @@ export default function DashboardView({ activeTab, setActiveTab, onClose }: Dash
           ) : (
             <div className="space-y-6">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex items-center gap-4">
+                <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex items-center gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all duration-300">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
                     <Database className="h-6 w-6" />
                   </div>
@@ -212,7 +212,7 @@ export default function DashboardView({ activeTab, setActiveTab, onClose }: Dash
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex items-center gap-4">
+                <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex items-center gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all duration-300">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
                     <Activity className="h-6 w-6" />
                   </div>
@@ -222,7 +222,7 @@ export default function DashboardView({ activeTab, setActiveTab, onClose }: Dash
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex items-center gap-4">
+                <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex items-center gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all duration-300">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
                     <Activity className="h-6 w-6" />
                   </div>
@@ -232,7 +232,7 @@ export default function DashboardView({ activeTab, setActiveTab, onClose }: Dash
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex items-center gap-4">
+                <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex items-center gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all duration-300">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
                     <Calendar className="h-6 w-6" />
                   </div>
@@ -385,7 +385,7 @@ export default function DashboardView({ activeTab, setActiveTab, onClose }: Dash
       )}
 
       {activeTab === "settings" && user && (
-        <div className="max-w-2xl bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6">
+        <div className="max-w-2xl bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6 animate-slide-in-right">
           <h3 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-3">Account Details</h3>
 
           {profileError && (
