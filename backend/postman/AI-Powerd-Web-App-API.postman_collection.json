@@ -1,0 +1,1279 @@
+{
+    "info": {
+        "_postman_id": "ai-powered-web-app-001",
+        "name": "AI Powered Web App API",
+        "description": "AI-powered chatbot with conversation history using LangGraph and MongoDB",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "_exporter_id": "langgraph-chatbot"
+    },
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "token",
+                "value": "{{access_token}}",
+                "type": "string"
+            }
+        ]
+    },
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8000",
+            "type": "string"
+        },
+        {
+            "key": "access_token",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "refresh_token",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "chat_id",
+            "value": "",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "Root",
+            "item": [
+                {
+                    "name": "Root Endpoint",
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                ""
+                            ]
+                        },
+                        "description": "Root endpoint with API information"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Health Check",
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/health",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "health"
+                            ]
+                        },
+                        "description": "Health check endpoint"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Root and health check endpoints"
+        },
+        {
+            "name": "Authentication",
+            "item": [
+                {
+                    "name": "Step 1: Generate OTP",
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"user@example.com\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/generate-otp",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "generate-otp"
+                            ]
+                        },
+                        "description": "Generate and send OTP to user's email. Creates a 6-digit OTP, stores it in the database with 5-minute expiration."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Step 2: Signup User",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 200) {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.collectionVariables.set(\"access_token\", jsonData.access_token);",
+                                    "    pm.collectionVariables.set(\"refresh_token\", jsonData.refresh_token);",
+                                    "    console.log(\"Access token saved:\", jsonData.access_token);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"user@example.com\",\n    \"password\": \"SecurePassword123!\",\n    \"otp\": 123456\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/signup/user",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "signup",
+                                "user"
+                            ]
+                        },
+                        "description": "Register a new user account. Verifies the OTP, creates a new user with 'student' role, sends welcome email, and returns access and refresh tokens."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Step 2: Signup Admin",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 200) {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.collectionVariables.set(\"access_token\", jsonData.access_token);",
+                                    "    pm.collectionVariables.set(\"refresh_token\", jsonData.refresh_token);",
+                                    "    console.log(\"Access token saved:\", jsonData.access_token);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Admin User\",\n    \"email\": \"admin@example.com\",\n    \"password\": \"SecureAdminPassword123!\",\n    \"otp\": 123456\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/signup/admin",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "signup",
+                                "admin"
+                            ]
+                        },
+                        "description": "Register a new admin account. Verifies the OTP, creates a new user with 'admin' role, sends welcome email, and returns access and refresh tokens."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Login User",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 200) {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.collectionVariables.set(\"access_token\", jsonData.access_token);",
+                                    "    pm.collectionVariables.set(\"refresh_token\", jsonData.refresh_token);",
+                                    "    console.log(\"Access token saved:\", jsonData.access_token);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/x-www-form-urlencoded"
+                            }
+                        ],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "username",
+                                    "value": "user@example.com",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "password",
+                                    "value": "SecurePassword123!",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/login/user",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "login",
+                                "user"
+                            ]
+                        },
+                        "description": "Authenticate user and return access tokens. Validates credentials, sends login notification email, and returns JWT tokens."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Login Admin",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 200) {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.collectionVariables.set(\"access_token\", jsonData.access_token);",
+                                    "    pm.collectionVariables.set(\"refresh_token\", jsonData.refresh_token);",
+                                    "    console.log(\"Access token saved:\", jsonData.access_token);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/x-www-form-urlencoded"
+                            }
+                        ],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "username",
+                                    "value": "admin@example.com",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "password",
+                                    "value": "SecureAdminPassword123!",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/login/admin",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "login",
+                                "admin"
+                            ]
+                        },
+                        "description": "Authenticate admin and return access tokens. Validates credentials, checks for admin role, sends login notification email, and returns JWT tokens."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Refresh Token",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 200) {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.collectionVariables.set(\"access_token\", jsonData.access_token);",
+                                    "    pm.collectionVariables.set(\"refresh_token\", jsonData.refresh_token);",
+                                    "    console.log(\"Access token saved:\", jsonData.access_token);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{refresh_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/auth/refresh-token",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "refresh-token"
+                            ]
+                        },
+                        "description": "Refresh access token using a valid refresh token."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Password Reset - Request OTP",
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"user@example.com\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/password-reset/request",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "password-reset",
+                                "request"
+                            ]
+                        },
+                        "description": "Request a password reset by sending an OTP to the user's email. Generates an OTP and emails it to the user if the account exists."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Password Reset - Verify OTP & Reset",
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"user@example.com\",\n    \"otp\": 123456,\n    \"new_password\": \"NewSecurePassword123!\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/password-reset/verify",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "password-reset",
+                                "verify"
+                            ]
+                        },
+                        "description": "Verify OTP and reset the user's password. Validates the OTP, updates the user's password, and sends confirmation email."
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Authentication endpoints for signup, login, and password reset"
+        },
+        {
+            "name": "Chatbot",
+            "item": [
+                {
+                    "name": "Send Message - New Chat",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 200) {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    if (jsonData.chat_id) {",
+                                    "        pm.collectionVariables.set(\"chat_id\", jsonData.chat_id);",
+                                    "        console.log(\"Chat ID saved:\", jsonData.chat_id);",
+                                    "    }",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"message\": \"Hello! Can you help me with Python programming?\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/chatbot/chat",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "chatbot",
+                                "chat"
+                            ]
+                        },
+                        "description": "Send a message to start a new chat. Creates a new chat session and returns the assistant's response with a new chat_id."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Send Message - Continue Chat",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"message\": \"Can you explain list comprehensions?\",\n    \"chat_id\": \"{{chat_id}}\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/chatbot/chat",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "chatbot",
+                                "chat"
+                            ]
+                        },
+                        "description": "Continue an existing chat conversation by providing the chat_id. Maintains conversation history."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Send Message - With Specific Model",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"message\": \"Explain quantum computing in simple terms\",\n    \"chat_id\": \"{{chat_id}}\",\n    \"model_name\": \"gemini-3.1-flash-lite\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/chatbot/chat",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "chatbot",
+                                "chat"
+                            ]
+                        },
+                        "description": "Send a message using a specific LLM model. Allows choosing between available models like gemini-3.1-flash-lite, gemini-3-flash-preview, etc."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Available Models",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/chatbot/available-models",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "chatbot",
+                                "available-models"
+                            ]
+                        },
+                        "description": "Get list of all available LLM models. Returns models grouped by provider, based on configured API keys."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Chats",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/chatbot/chats",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "chatbot",
+                                "chats"
+                            ]
+                        },
+                        "description": "Retrieve all chat sessions for the authenticated user. Returns chat metadata sorted by most recently updated."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Specific Chat",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/chatbot/chats/{{chat_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "chatbot",
+                                "chats",
+                                "{{chat_id}}"
+                            ]
+                        },
+                        "description": "Retrieve a specific chat session with full message history. Fetches chat metadata and all messages with timestamps and usage data."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Chat",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/chatbot/chats/{{chat_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "chatbot",
+                                "chats",
+                                "{{chat_id}}"
+                            ]
+                        },
+                        "description": "Delete a specific chat session and all associated messages. Removes chat metadata and all messages from MongoDB."
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Chatbot endpoints for sending messages, managing chats, and viewing available models"
+        },
+        {
+            "name": "Token Usage",
+            "item": [
+                {
+                    "name": "Get Usage Summary - All Models",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/token-usage/summary?days=30",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "token-usage",
+                                "summary"
+                            ],
+                            "query": [
+                                {
+                                    "key": "days",
+                                    "value": "30",
+                                    "description": "Number of days to look back"
+                                }
+                            ]
+                        },
+                        "description": "Get aggregated token usage statistics for all models used in the last 30 days."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Usage Summary - Specific Model",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/token-usage/summary?model_name=gemini-3.1-flash-lite&days=7",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "token-usage",
+                                "summary"
+                            ],
+                            "query": [
+                                {
+                                    "key": "model_name",
+                                    "value": "gemini-3.1-flash-lite",
+                                    "description": "Filter by specific model"
+                                },
+                                {
+                                    "key": "days",
+                                    "value": "7",
+                                    "description": "Number of days to look back"
+                                }
+                            ]
+                        },
+                        "description": "Get token usage summary for a specific model in the last 7 days."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Usage History - All",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/token-usage/history?limit=50&skip=0",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "token-usage",
+                                "history"
+                            ],
+                            "query": [
+                                {
+                                    "key": "limit",
+                                    "value": "50",
+                                    "description": "Maximum records to return"
+                                },
+                                {
+                                    "key": "skip",
+                                    "value": "0",
+                                    "description": "Records to skip for pagination"
+                                }
+                            ]
+                        },
+                        "description": "Get detailed token usage history with pagination. Returns individual usage records sorted by timestamp."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Usage History - By Model",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/token-usage/history?model_name=gemini-3.1-flash-lite&limit=100",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "token-usage",
+                                "history"
+                            ],
+                            "query": [
+                                {
+                                    "key": "model_name",
+                                    "value": "gemini-3.1-flash-lite",
+                                    "description": "Filter by specific model"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "100"
+                                }
+                            ]
+                        },
+                        "description": "Get token usage history filtered by specific model."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Usage History - By Chat",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/token-usage/history?chat_id={{chat_id}}&limit=100",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "token-usage",
+                                "history"
+                            ],
+                            "query": [
+                                {
+                                    "key": "chat_id",
+                                    "value": "{{chat_id}}",
+                                    "description": "Filter by specific chat"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "100"
+                                }
+                            ]
+                        },
+                        "description": "Get token usage history for a specific chat session."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Chat Token Usage",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/token-usage/by-chat/{{chat_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "token-usage",
+                                "by-chat",
+                                "{{chat_id}}"
+                            ]
+                        },
+                        "description": "Get aggregated token usage for a specific chat session. Shows total tokens used across all models in that chat."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Used Models",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/token-usage/models",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "token-usage",
+                                "models"
+                            ]
+                        },
+                        "description": "Get list of all LLM models used by the authenticated user with usage counts and last used dates."
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Token usage tracking and analytics endpoints"
+        },
+        {
+            "name": "User Management",
+            "item": [
+                {
+                    "name": "User",
+                    "item": [
+                        {
+                            "name": "Get My Profile",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{base_url}}/user_management/me",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "user_management",
+                                        "me"
+                                    ]
+                                },
+                                "description": "Get the current logged-in user's profile details."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Update My Profile - Name",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"name\": \"John Smith\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/user_management/me",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "user_management",
+                                        "me"
+                                    ]
+                                },
+                                "description": "Update the current user's name. Sends confirmation email after update."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Update My Profile - Password",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"password\": \"NewSecurePassword456!\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/user_management/me",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "user_management",
+                                        "me"
+                                    ]
+                                },
+                                "description": "Update the current user's password. Password is automatically hashed and confirmation email is sent."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Update My Profile - Name & Password",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"name\": \"John Smith\",\n    \"password\": \"NewSecurePassword456!\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/user_management/me",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "user_management",
+                                        "me"
+                                    ]
+                                },
+                                "description": "Update both name and password simultaneously."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Delete My Account",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{base_url}}/user_management/me",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "user_management",
+                                        "me"
+                                    ]
+                                },
+                                "description": "Delete the authenticated user's account permanently. Removes user from database and sends confirmation email."
+                            },
+                            "response": []
+                        }
+                    ],
+                    "description": "User profile management endpoints"
+                },
+                {
+                    "name": "Admin Profile",
+                    "item": [
+                        {
+                            "name": "Get Admin Profile",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{base_url}}/user_management/admin/me",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "user_management",
+                                        "admin",
+                                        "me"
+                                    ]
+                                },
+                                "description": "Get the current logged-in admin's profile details."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Update Admin Profile",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"name\": \"Admin User\",\n    \"password\": \"NewAdminPass123!\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/user_management/admin/me",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "user_management",
+                                        "admin",
+                                        "me"
+                                    ]
+                                },
+                                "description": "Update the current admin's profile (name or password)."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Delete Admin Account",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{base_url}}/user_management/admin/me",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "user_management",
+                                        "admin",
+                                        "me"
+                                    ]
+                                },
+                                "description": "Delete the authenticated admin's account permanently."
+                            },
+                            "response": []
+                        }
+                    ],
+                    "description": "Admin profile management endpoints"
+                },
+                {
+                    "name": "Admin",
+                    "item": [
+                        {
+                            "name": "List All Users",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{base_url}}/user_management/admin/users",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "user_management",
+                                        "admin",
+                                        "users"
+                                    ]
+                                },
+                                "description": "Get a list of all users (Admin only). Returns all users without password hashes."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Create User - Student",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"name\": \"Jane Doe\",\n    \"email\": \"jane@example.com\",\n    \"password\": \"SecurePass123!\",\n    \"role\": \"student\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/user_management/admin/users",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "user_management",
+                                        "admin",
+                                        "users"
+                                    ]
+                                },
+                                "description": "Create a new user with student role (Admin only)."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Create User - Admin",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"name\": \"Admin User\",\n    \"email\": \"admin@example.com\",\n    \"password\": \"AdminPass123!\",\n    \"role\": \"admin\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/user_management/admin/users",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "user_management",
+                                        "admin",
+                                        "users"
+                                    ]
+                                },
+                                "description": "Create a new user with admin role (Admin only)."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Delete User",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"email\": \"user@example.com\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/user_management/admin/users",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "user_management",
+                                        "admin",
+                                        "users"
+                                    ]
+                                },
+                                "description": "Delete a user by email (Admin only)."
+                            },
+                            "response": []
+                        }
+                    ],
+                    "description": "Admin-only user management endpoints"
+                },
+                {
+                    "name": "Admin Messages",
+                    "item": [
+                        {
+                            "name": "Get All User Messages",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{base_url}}/user_management/admin/all_messages?skip=0&limit=50",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "user_management",
+                                        "admin",
+                                        "all_messages"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "skip",
+                                            "value": "0",
+                                            "description": "Number of records to skip (pagination)"
+                                        },
+                                        {
+                                            "key": "limit",
+                                            "value": "50",
+                                            "description": "Max number of records to return"
+                                        }
+                                    ]
+                                },
+                                "description": "Get a global list of all messages from all users (Admin only). Sorted by latest message first."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Get All Messages (Include Deleted)",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{base_url}}/user_management/admin/all_messages?include_deleted=true&skip=0&limit=50",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "user_management",
+                                        "admin",
+                                        "all_messages"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "include_deleted",
+                                            "value": "true",
+                                            "description": "Include all messages (both deleted and active)"
+                                        },
+                                        {
+                                            "key": "skip",
+                                            "value": "0"
+                                        },
+                                        {
+                                            "key": "limit",
+                                            "value": "50"
+                                        }
+                                    ]
+                                },
+                                "description": "Get all messages including deleted ones (Admin only)."
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "Get Deleted Messages Only",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{base_url}}/user_management/admin/all_messages?deleted_only=true&skip=0&limit=50",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "user_management",
+                                        "admin",
+                                        "all_messages"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "deleted_only",
+                                            "value": "true",
+                                            "description": "Return only deleted messages"
+                                        },
+                                        {
+                                            "key": "skip",
+                                            "value": "0"
+                                        },
+                                        {
+                                            "key": "limit",
+                                            "value": "50"
+                                        }
+                                    ]
+                                },
+                                "description": "Get only deleted messages from chats that users have deleted (Admin only)."
+                            },
+                            "response": []
+                        }
+                    ],
+                    "description": "Admin message feed endpoints with filtering options"
+                }
+            ],
+            "description": "User profile and admin management endpoints"
+        }
+    ]
+}

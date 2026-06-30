@@ -1,0 +1,1843 @@
+openapi: 3.1.0
+info:
+  title: LangGraph Chatbot API
+  description: AI-powered chatbot with conversation history using LangGraph and MongoDB
+  version: 1.0.0
+paths:
+  /auth/generate-otp:
+    post:
+      tags:
+      - Generate OTP
+      summary: Send Otp Endpoint
+      description: "Generate and send OTP to user's email.\n\nCreates a 6-digit OTP,\
+        \ stores it in the database with 5-minute expiration,\nand sends it to the\
+        \ user's email address.\n\nGuards: CAPTCHA verification (\xA710), 4-layer\
+        \ email validation (\xA74),\nOTP rate limiting (\xA75.1), bounce/complaint\
+        \ flag pre-send check (\xA76.3).\n\nArgs:\n    request: FastAPI request (used\
+        \ to extract client IP for CAPTCHA)\n    email: User's email address\n   \
+        \ captcha_token: Cloudflare Turnstile token (optional in dev mode)\n\nReturns:\n\
+        \    Success message confirming OTP was sent"
+      operationId: send_otp_endpoint_auth_generate_otp_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body_send_otp_endpoint_auth_generate_otp_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /auth/signup/user:
+    post:
+      tags:
+      - User Auth
+      summary: Signup User
+      description: "Register a new user account.\n\nVerifies the OTP, creates a new\
+        \ user with 'student' role, sends welcome email,\nand returns access and refresh\
+        \ tokens.\n\nArgs:\n    user_data: User registration data including name,\
+        \ email, password, and OTP\n\nReturns:\n    Access token, refresh token, and\
+        \ token type\n\nRaises:\n    HTTPException: If OTP is invalid or email already\
+        \ registered"
+      operationId: signup_user_auth_signup_user_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimplifiedUser'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /auth/signup/admin:
+    post:
+      tags:
+      - Admin Auth
+      summary: Signup Admin
+      description: "Register a new admin account.\n\nVerifies the OTP, creates a new\
+        \ user with 'admin' role, sends welcome email,\nand returns access and refresh\
+        \ tokens.\n\nArgs:\n    user_data: User registration data including name,\
+        \ email, password, and OTP\n\nReturns:\n    Access token, refresh token, and\
+        \ token type\n\nRaises:\n    HTTPException: If OTP is invalid or email already\
+        \ registered"
+      operationId: signup_admin_auth_signup_admin_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimplifiedUser'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /auth/refresh-token:
+    post:
+      tags:
+      - Token Management
+      summary: Refresh Token Endpoint
+      description: "Refresh access token using a valid refresh token.\n\nArgs:\n \
+        \   refresh_token: The refresh token provided by the user.\n\nReturns:\n \
+        \   A new access token and refresh token.\n\nRaises:\n    HTTPException: If\
+        \ the refresh token is invalid or expired."
+      operationId: refresh_token_endpoint_auth_refresh_token_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+      security:
+      - OAuth2PasswordBearer: []
+  /auth/login/user:
+    post:
+      tags:
+      - User Auth
+      summary: Login User
+      description: "Authenticate user and return access tokens.\n\nValidates credentials,\
+        \ sends login notification email, and returns JWT tokens.\n\nArgs:\n    form_data:\
+        \ OAuth2 form with username (email) and password\n\nReturns:\n    Access token,\
+        \ refresh token, and token type\n\nRaises:\n    HTTPException: If credentials\
+        \ are invalid"
+      operationId: login_user_auth_login_user_post
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_login_user_auth_login_user_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /auth/login/admin:
+    post:
+      tags:
+      - Admin Auth
+      summary: Login Admin
+      description: "Authenticate admin and return access tokens.\n\nValidates credentials,\
+        \ checks for admin role, sends login notification email, \nand returns JWT\
+        \ tokens.\n\nArgs:\n    form_data: OAuth2 form with username (email) and password\n\
+        \nReturns:\n    Access token, refresh token, and token type\n\nRaises:\n \
+        \   HTTPException: If credentials are invalid or user is not an admin"
+      operationId: login_admin_auth_login_admin_post
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_login_admin_auth_login_admin_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /auth/password-reset/request:
+    post:
+      tags:
+      - Password Reset
+      summary: Password Reset Request
+      description: "Request a password reset by sending an OTP to the user's email.\n\
+        \nGenerates an OTP and emails it to the user if the account exists.\nAlways\
+        \ returns success message for security (prevents email enumeration).\n\nArgs:\n\
+        \    email: User's email address\n\nReturns:\n    Success message (always\
+        \ returns success for security)"
+      operationId: password_reset_request_auth_password_reset_request_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body_password_reset_request_auth_password_reset_request_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /auth/password-reset/verify:
+    post:
+      tags:
+      - Password Reset
+      summary: Verify Otp And Reset Password
+      description: "Verify OTP and reset the user's password.\n\nValidates the OTP,\
+        \ updates the user's password, and sends confirmation email.\n\nArgs:\n  \
+        \  data: Email, OTP, and new password\n\nReturns:\n    Success message\n\n\
+        Raises:\n    HTTPException: If OTP is invalid or expired"
+      operationId: verify_otp_and_reset_password_auth_password_reset_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirm'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /user_management/admin/me:
+    get:
+      tags:
+      - Admin Profile
+      summary: Read Admin Me
+      description: "Get the current logged-in admin's profile details.\n\nReturns:\n\
+        \    Admin profile information"
+      operationId: read_admin_me_user_management_admin_me_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+      security:
+      - OAuth2PasswordBearer: []
+    put:
+      tags:
+      - Admin Profile
+      summary: Update Admin Me
+      description: "Update the current admin's profile.\n\nAllows updating name or\
+        \ password. Passwords are automatically hashed.\nSends confirmation email\
+        \ after successful update.\n\nArgs:\n    update_data: Fields to update (name,\
+        \ password)\n    current_user: Authenticated admin from JWT token\n\nReturns:\n\
+        \    Success message"
+      operationId: update_admin_me_user_management_admin_me_put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - OAuth2PasswordBearer: []
+    delete:
+      tags:
+      - Admin Profile
+      summary: Delete Admin Me
+      description: "Delete the authenticated admin's account permanently.\n\nRemoves\
+        \ admin from database and sends confirmation email.\n\nArgs:\n    current_user:\
+        \ Authenticated admin from JWT token\n\nReturns:\n    204 No Content on successful\
+        \ deletion\n\nRaises:\n    HTTPException: If user not found"
+      operationId: delete_admin_me_user_management_admin_me_delete
+      responses:
+        '204':
+          description: Successful Response
+      security:
+      - OAuth2PasswordBearer: []
+  /user_management/me:
+    get:
+      tags:
+      - User Profile
+      summary: Read User Me
+      description: "Get the current logged-in user's profile details.\n\nReturns:\n\
+        \    User profile information"
+      operationId: read_user_me_user_management_me_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+      security:
+      - OAuth2PasswordBearer: []
+    put:
+      tags:
+      - User Profile
+      summary: Update User Me
+      description: "Update the current user's profile.\n\nAllows updating name or\
+        \ password. Passwords are automatically hashed.\nSends confirmation email\
+        \ after successful update.\n\nArgs:\n    update_data: Fields to update (name,\
+        \ password)\n    current_user: Authenticated user from JWT token\n\nReturns:\n\
+        \    Success message"
+      operationId: update_user_me_user_management_me_put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - OAuth2PasswordBearer: []
+    delete:
+      tags:
+      - User Profile
+      summary: Delete User Me
+      description: "Delete the authenticated user's account permanently.\n\nRemoves\
+        \ user from database and sends confirmation email.\n\nArgs:\n    current_user:\
+        \ Authenticated user from JWT token\n\nReturns:\n    204 No Content on successful\
+        \ deletion\n\nRaises:\n    HTTPException: If user not found"
+      operationId: delete_user_me_user_management_me_delete
+      responses:
+        '204':
+          description: Successful Response
+      security:
+      - OAuth2PasswordBearer: []
+  /user_management/admin/users:
+    get:
+      tags:
+      - User Administration
+      summary: List All Users
+      description: "Get a list of all users (Admin only).\n\nReturns:\n    List of\
+        \ all users without password hashes, including user_id"
+      operationId: list_all_users_user_management_admin_users_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ReturnUser'
+                type: array
+                title: Response List All Users User Management Admin Users Get
+      security:
+      - OAuth2PasswordBearer: []
+    post:
+      tags:
+      - User Administration
+      summary: Create New User
+      description: "Create a new user (Admin only).\n\nArgs:\n    user: User data\
+        \ including email, password, name, and role\n\nReturns:\n    Created user\
+        \ data including user_id\n\nRaises:\n    HTTPException: If email already registered"
+      operationId: create_new_user_user_management_admin_users_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnUser'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - OAuth2PasswordBearer: []
+    delete:
+      tags:
+      - User Administration
+      summary: Delete A User
+      description: "Delete a user by email (Admin only).\n\nArgs:\n    user_to_delete:\
+        \ Email of user to delete\n\nReturns:\n    204 No Content on successful deletion\n\
+        \nRaises:\n    HTTPException: If user not found"
+      operationId: delete_a_user_user_management_admin_users_delete
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteUser'
+        required: true
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - OAuth2PasswordBearer: []
+  /user_management/admin/users/{email}:
+    patch:
+      tags:
+      - User Administration
+      summary: Update A User
+      description: "Update a user's details by email (Admin only).\n\nAllows updating\
+        \ name, role, is_active, is_bounced, is_complained.\nEmail cannot be changed.\n\
+        \nArgs:\n    email: Email of the user to update\n    update_data: Fields to\
+        \ update\n\nReturns:\n    Updated user data\n\nRaises:\n    HTTPException:\
+        \ If user not found or no valid fields provided"
+      operationId: update_a_user_user_management_admin_users__email__patch
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: email
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminUserUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnUser'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /user_management/admin/all_messages:
+    get:
+      tags:
+      - User Administration
+      summary: Get All User Messages
+      description: "Get a global list of all messages from all users (Admin only).\n\
+        Sorted by latest message first.\n\nArgs:\n    skip: Number of records to skip\
+        \ (pagination)\n    limit: Max number of records to return (default 50)\n\
+        \    include_deleted: If True, include all messages (both deleted and active)\n\
+        \    deleted_only: If True, return only deleted messages\n    \nReturns:\n\
+        \    List of admin message logs"
+      operationId: get_all_user_messages_user_management_admin_all_messages_get
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: skip
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 0
+          title: Skip
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 50
+          title: Limit
+      - name: include_deleted
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Include Deleted
+      - name: deleted_only
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Deleted Only
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AdminMessageLog'
+                title: Response Get All User Messages User Management Admin All Messages
+                  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /chatbot/chat:
+    post:
+      tags:
+      - Chatbot
+      summary: Chat Endpoint
+      description: "Send a message to the chatbot and receive a response.\n\nProcesses\
+        \ user message through LangGraph workflow, saves conversation to MongoDB,\n\
+        tracks token usage, and updates chat metadata.\n\nArgs:\n    chat_request:\
+        \ Message and optional chat_id and model_name\n    current_user: Authenticated\
+        \ user from JWT token\n\nReturns:\n    Assistant's response, chat_id, and\
+        \ usage metadata"
+      operationId: chat_endpoint_chatbot_chat_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - OAuth2PasswordBearer: []
+  /chatbot/available-models:
+    get:
+      tags:
+      - Chatbot
+      summary: Get Available Models
+      description: "Get list of all available LLM models.\n\nReturns models grouped\
+        \ by provider, based on configured API keys.\nOnly includes providers that\
+        \ have valid API keys in settings.\n\nReturns:\n    Default model, providers\
+        \ with their models, flat list of all models, and total count"
+      operationId: get_available_models_chatbot_available_models_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailableModelsResponse'
+  /chatbot/chats:
+    get:
+      tags:
+      - Chatbot
+      summary: Get All Chats
+      description: "Retrieve all chat sessions for the authenticated user.\n\nReturns\
+        \ chat metadata sorted by most recently updated.\n\nArgs:\n    current_user:\
+        \ Authenticated user from JWT token\n\nReturns:\n    List of chat sessions\
+        \ and total count"
+      operationId: get_all_chats_chatbot_chats_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatListResponse'
+      security:
+      - OAuth2PasswordBearer: []
+  /chatbot/chats/{chat_id}:
+    get:
+      tags:
+      - Chatbot
+      summary: Get Specific Chat
+      description: "Retrieve a specific chat session with full message history.\n\n\
+        Fetches chat metadata and all messages, formatting them with role, content,\n\
+        timestamp, and usage metadata.\n\nArgs:\n    chat_id: Unique identifier for\
+        \ the chat session\n    current_user: Authenticated user from JWT token\n\n\
+        Returns:\n    Chat metadata and formatted message history\n\nRaises:\n   \
+        \ HTTPException: If chat not found or doesn't belong to user"
+      operationId: get_specific_chat_chatbot_chats__chat_id__get
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: chat_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Chat Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - Chatbot
+      summary: Delete Chat
+      description: "Delete a specific chat session and all associated messages.\n\n\
+        Removes chat metadata and messages from MongoDB. Admin messages are soft-deleted\n\
+        (marked with deleted: true) for audit purposes.\n\nArgs:\n    chat_id: Unique\
+        \ identifier for the chat session\n    current_user: Authenticated user from\
+        \ JWT token\n\nReturns:\n    Success message with deleted chat_id\n\nRaises:\n\
+        \    HTTPException: If chat not found or doesn't belong to user"
+      operationId: delete_chat_chatbot_chats__chat_id__delete
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: chat_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Chat Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteChatResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /token-usage/summary:
+    get:
+      tags:
+      - Token Usage
+      summary: Get Token Usage Summary
+      description: Get aggregated token usage statistics for the authenticated user.
+      operationId: get_token_usage_summary_token_usage_summary_get
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: model_name
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by specific LLM model
+          title: Model Name
+        description: Filter by specific LLM model
+      - name: days
+        in: query
+        required: false
+        schema:
+          type: integer
+          description: Number of days to look back
+          default: 30
+          title: Days
+        description: Number of days to look back
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenUsageSummaryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /token-usage/history:
+    get:
+      tags:
+      - Token Usage
+      summary: Get Token Usage History
+      description: Get detailed token usage history with pagination.
+      operationId: get_token_usage_history_token_usage_history_get
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: model_name
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by specific LLM model
+          title: Model Name
+        description: Filter by specific LLM model
+      - name: chat_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by specific chat session
+          title: Chat Id
+        description: Filter by specific chat session
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 1000
+          description: Maximum number of records to return
+          default: 100
+          title: Limit
+        description: Maximum number of records to return
+      - name: skip
+        in: query
+        required: false
+        schema:
+          type: integer
+          description: Number of records to skip
+          default: 0
+          title: Skip
+        description: Number of records to skip
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenUsageHistoryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /token-usage/by-chat/{chat_id}:
+    get:
+      tags:
+      - Token Usage
+      summary: Get Chat Token Usage
+      description: Get aggregated token usage for a specific chat session.
+      operationId: get_chat_token_usage_token_usage_by_chat__chat_id__get
+      security:
+      - OAuth2PasswordBearer: []
+      parameters:
+      - name: chat_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Chat Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatTokenUsageResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /token-usage/models:
+    get:
+      tags:
+      - Token Usage
+      summary: Get Used Models
+      description: Get list of all LLM models used by the authenticated user.
+      operationId: get_used_models_token_usage_models_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsedModelsResponse'
+      security:
+      - OAuth2PasswordBearer: []
+  /:
+    get:
+      tags:
+      - Root
+      summary: Root
+      description: Root endpoint with API information.
+      operationId: root__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RootResponse'
+  /health:
+    get:
+      tags:
+      - Health
+      summary: Health Check
+      description: Health check endpoint.
+      operationId: health_check_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+components:
+  schemas:
+    AdminMessageLog:
+      properties:
+        user_id:
+          type: string
+          title: User Id
+        user_name:
+          type: string
+          title: User Name
+        user_email:
+          type: string
+          title: User Email
+        input_message:
+          type: string
+          title: Input Message
+        ai_response:
+          type: string
+          title: Ai Response
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+        chat_id:
+          type: string
+          title: Chat Id
+        session_id:
+          type: string
+          title: Session Id
+        model_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Model Name
+        deleted:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Deleted
+          default: false
+        deleted_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Deleted At
+      type: object
+      required:
+      - user_id
+      - user_name
+      - user_email
+      - input_message
+      - ai_response
+      - timestamp
+      - chat_id
+      - session_id
+      title: AdminMessageLog
+      description: 'Represents a flattened message log for the Admin Activity Feed.
+
+        This is a denormalized record optimized for fast read/sort operations.'
+    AdminUserUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        role:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Role
+        is_active:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Active
+        is_bounced:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Bounced
+        is_complained:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Complained
+      type: object
+      title: AdminUserUpdate
+      description: Fields an admin can update on any user's account.
+    AvailableModelsResponse:
+      properties:
+        default_model:
+          type: string
+          title: Default Model
+        providers:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          type: object
+          title: Providers
+        all_models:
+          items:
+            type: string
+          type: array
+          title: All Models
+        total_models:
+          type: integer
+          title: Total Models
+      type: object
+      required:
+      - default_model
+      - providers
+      - all_models
+      - total_models
+      title: AvailableModelsResponse
+      description: Response listing all available LLM models grouped by provider.
+    Body_login_admin_auth_login_admin_post:
+      properties:
+        grant_type:
+          anyOf:
+          - type: string
+            pattern: ^password$
+          - type: 'null'
+          title: Grant Type
+        username:
+          type: string
+          title: Username
+        password:
+          type: string
+          format: password
+          title: Password
+        scope:
+          type: string
+          title: Scope
+          default: ''
+        client_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Client Id
+        client_secret:
+          anyOf:
+          - type: string
+          - type: 'null'
+          format: password
+          title: Client Secret
+      type: object
+      required:
+      - username
+      - password
+      title: Body_login_admin_auth_login_admin_post
+    Body_login_user_auth_login_user_post:
+      properties:
+        grant_type:
+          anyOf:
+          - type: string
+            pattern: ^password$
+          - type: 'null'
+          title: Grant Type
+        username:
+          type: string
+          title: Username
+        password:
+          type: string
+          format: password
+          title: Password
+        scope:
+          type: string
+          title: Scope
+          default: ''
+        client_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Client Id
+        client_secret:
+          anyOf:
+          - type: string
+          - type: 'null'
+          format: password
+          title: Client Secret
+      type: object
+      required:
+      - username
+      - password
+      title: Body_login_user_auth_login_user_post
+    Body_password_reset_request_auth_password_reset_request_post:
+      properties:
+        email:
+          type: string
+          title: Email
+      type: object
+      required:
+      - email
+      title: Body_password_reset_request_auth_password_reset_request_post
+    Body_send_otp_endpoint_auth_generate_otp_post:
+      properties:
+        email:
+          type: string
+          title: Email
+        captcha_token:
+          type: string
+          title: Captcha Token
+          description: Cloudflare Turnstile token
+          default: ''
+      type: object
+      required:
+      - email
+      title: Body_send_otp_endpoint_auth_generate_otp_post
+    ChatDetailResponse:
+      properties:
+        chat_metadata:
+          $ref: '#/components/schemas/ChatMetadata'
+        messages:
+          items:
+            $ref: '#/components/schemas/MessageItem'
+          type: array
+          title: Messages
+      type: object
+      required:
+      - chat_metadata
+      - messages
+      title: ChatDetailResponse
+      description: Response for a specific chat with messages.
+    ChatListResponse:
+      properties:
+        chats:
+          items:
+            $ref: '#/components/schemas/ChatMetadata'
+          type: array
+          title: Chats
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - chats
+      - total
+      title: ChatListResponse
+      description: Response for listing all chats.
+    ChatMetadata:
+      properties:
+        SessionId:
+          type: string
+          title: Sessionid
+        user_id:
+          type: string
+          title: User Id
+        chat_id:
+          type: string
+          title: Chat Id
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        message_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Message Count
+        total_input_tokens:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Total Input Tokens
+        total_output_tokens:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Total Output Tokens
+        total_tokens:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Total Tokens
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+      additionalProperties: true
+      type: object
+      required:
+      - SessionId
+      - user_id
+      - chat_id
+      title: ChatMetadata
+      description: Metadata for a chat session.
+    ChatModelUsage:
+      properties:
+        model_name:
+          type: string
+          title: Model Name
+        total_input_tokens:
+          type: integer
+          title: Total Input Tokens
+        total_output_tokens:
+          type: integer
+          title: Total Output Tokens
+        total_tokens:
+          type: integer
+          title: Total Tokens
+        request_count:
+          type: integer
+          title: Request Count
+      type: object
+      required:
+      - model_name
+      - total_input_tokens
+      - total_output_tokens
+      - total_tokens
+      - request_count
+      title: ChatModelUsage
+      description: Token usage for a single model within a specific chat session.
+    ChatRequest:
+      properties:
+        message:
+          type: string
+          title: Message
+        chat_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Chat Id
+        model_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Model Name
+      type: object
+      required:
+      - message
+      title: ChatRequest
+    ChatResponse:
+      properties:
+        response:
+          type: string
+          title: Response
+        chat_id:
+          type: string
+          title: Chat Id
+        usage:
+          anyOf:
+          - $ref: '#/components/schemas/UsageMetadata'
+          - type: 'null'
+      type: object
+      required:
+      - response
+      - chat_id
+      title: ChatResponse
+      description: Response from the chatbot for a single message.
+    ChatTokenUsageResponse:
+      properties:
+        user_id:
+          type: string
+          title: User Id
+        chat_id:
+          type: string
+          title: Chat Id
+        models:
+          items:
+            $ref: '#/components/schemas/ChatModelUsage'
+          type: array
+          title: Models
+        totals:
+          $ref: '#/components/schemas/UsageTotals'
+      type: object
+      required:
+      - user_id
+      - chat_id
+      - models
+      - totals
+      title: ChatTokenUsageResponse
+      description: Aggregated token usage for a specific chat session.
+    CreateUser:
+      properties:
+        name:
+          type: string
+          title: Name
+        email:
+          type: string
+          format: email
+          title: Email
+        password:
+          type: string
+          title: Password
+        role:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Role
+          default: user
+      type: object
+      required:
+      - name
+      - email
+      - password
+      title: CreateUser
+      description: Payload for admin-created user accounts.
+    DeleteChatResponse:
+      properties:
+        message:
+          type: string
+          title: Message
+        chat_id:
+          type: string
+          title: Chat Id
+      type: object
+      required:
+      - message
+      - chat_id
+      title: DeleteChatResponse
+      description: Response confirming chat deletion.
+    DeleteUser:
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+      type: object
+      required:
+      - email
+      title: DeleteUser
+      description: Payload for deleting a user by email.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    HealthResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - status
+      title: HealthResponse
+      description: Health check response.
+    InputTokenDetails:
+      properties:
+        cache_read:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Cache Read
+        cache_creation:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Cache Creation
+        audio:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Audio
+        text:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Text
+      additionalProperties: true
+      type: object
+      title: InputTokenDetails
+      description: Granular breakdown of input tokens, as reported by the LLM provider.
+    MessageItem:
+      properties:
+        role:
+          type: string
+          title: Role
+          description: Either 'user' or 'assistant'
+        content:
+          type: string
+          title: Content
+        timestamp:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Timestamp
+        usage_metadata:
+          anyOf:
+          - $ref: '#/components/schemas/UsageMetadata'
+          - type: 'null'
+          description: Token usage metadata, only present on assistant messages
+      type: object
+      required:
+      - role
+      - content
+      title: MessageItem
+      description: A single message item in a chat conversation.
+    MessageResponse:
+      properties:
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - message
+      title: MessageResponse
+      description: Generic single-message response body for informational endpoints.
+    ModelInfo:
+      properties:
+        model_name:
+          type: string
+          title: Model Name
+        usage_count:
+          type: integer
+          title: Usage Count
+        last_used:
+          type: string
+          format: date-time
+          title: Last Used
+      type: object
+      required:
+      - model_name
+      - usage_count
+      - last_used
+      title: ModelInfo
+      description: Brief info about a model used by the current user.
+    ModelUsage:
+      properties:
+        model_name:
+          type: string
+          title: Model Name
+        total_input_tokens:
+          type: integer
+          title: Total Input Tokens
+        total_output_tokens:
+          type: integer
+          title: Total Output Tokens
+        total_tokens:
+          type: integer
+          title: Total Tokens
+        request_count:
+          type: integer
+          title: Request Count
+        first_used:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: First Used
+        last_used:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Used
+      type: object
+      required:
+      - model_name
+      - total_input_tokens
+      - total_output_tokens
+      - total_tokens
+      - request_count
+      title: ModelUsage
+      description: Token usage statistics for a single model over a given period.
+    OutputTokenDetails:
+      properties:
+        reasoning:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Reasoning
+        audio:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Audio
+        text:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Text
+      additionalProperties: true
+      type: object
+      title: OutputTokenDetails
+      description: Granular breakdown of output tokens, as reported by the LLM provider.
+    PasswordResetConfirm:
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+        otp:
+          type: integer
+          title: Otp
+        new_password:
+          type: string
+          title: New Password
+      type: object
+      required:
+      - email
+      - otp
+      - new_password
+      title: PasswordResetConfirm
+      description: Payload for confirming a password reset with OTP.
+    ReturnUser:
+      properties:
+        user_id:
+          type: string
+          title: User Id
+        name:
+          type: string
+          title: Name
+        email:
+          type: string
+          format: email
+          title: Email
+        role:
+          type: string
+          title: Role
+        auth_method:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Auth Method
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+        is_active:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Active
+          default: true
+        is_bounced:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Bounced
+          default: false
+        is_complained:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Complained
+          default: false
+        chat_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Chat Count
+          default: 0
+        total_tokens:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Total Tokens
+          default: 0
+        models_used:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Models Used
+          default: []
+      type: object
+      required:
+      - user_id
+      - name
+      - email
+      - role
+      title: ReturnUser
+      description: Full user record returned in admin user management endpoints.
+    RootResponse:
+      properties:
+        message:
+          type: string
+          title: Message
+        docs:
+          type: string
+          title: Docs
+        version:
+          type: string
+          title: Version
+      type: object
+      required:
+      - message
+      - docs
+      - version
+      title: RootResponse
+      description: Response from the API root endpoint.
+    SimplifiedUser:
+      properties:
+        name:
+          type: string
+          title: Name
+          example: John Doe
+        email:
+          type: string
+          format: email
+          title: Email
+          example: john@example.com
+        password:
+          type: string
+          title: Password
+          example: securePass123
+        otp:
+          type: integer
+          title: Otp
+          description: 6-digit code
+          example: 123456
+      type: object
+      required:
+      - name
+      - email
+      - password
+      - otp
+      title: SimplifiedUser
+    Token:
+      properties:
+        access_token:
+          type: string
+          title: Access Token
+        refresh_token:
+          type: string
+          title: Refresh Token
+        token_type:
+          type: string
+          title: Token Type
+          default: bearer
+      type: object
+      required:
+      - access_token
+      - refresh_token
+      title: Token
+    TokenUsageHistoryResponse:
+      properties:
+        user_id:
+          type: string
+          title: User Id
+        total_records:
+          type: integer
+          title: Total Records
+        returned_records:
+          type: integer
+          title: Returned Records
+        skip:
+          type: integer
+          title: Skip
+        limit:
+          type: integer
+          title: Limit
+        records:
+          items:
+            $ref: '#/components/schemas/TokenUsageRecord'
+          type: array
+          title: Records
+      type: object
+      required:
+      - user_id
+      - total_records
+      - returned_records
+      - skip
+      - limit
+      - records
+      title: TokenUsageHistoryResponse
+      description: Paginated token usage history for a user.
+    TokenUsageRecord:
+      properties:
+        user_id:
+          type: string
+          title: User Id
+        chat_id:
+          type: string
+          title: Chat Id
+        model_name:
+          type: string
+          title: Model Name
+        input_tokens:
+          type: integer
+          title: Input Tokens
+        output_tokens:
+          type: integer
+          title: Output Tokens
+        total_tokens:
+          type: integer
+          title: Total Tokens
+        input_token_details:
+          anyOf:
+          - $ref: '#/components/schemas/InputTokenDetails'
+          - type: 'null'
+        output_token_details:
+          anyOf:
+          - $ref: '#/components/schemas/OutputTokenDetails'
+          - type: 'null'
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+      type: object
+      required:
+      - user_id
+      - chat_id
+      - model_name
+      - input_tokens
+      - output_tokens
+      - total_tokens
+      - timestamp
+      title: TokenUsageRecord
+      description: A single token usage record for one LLM request.
+    TokenUsageSummaryResponse:
+      properties:
+        user_id:
+          type: string
+          title: User Id
+        period_days:
+          type: integer
+          title: Period Days
+        start_date:
+          type: string
+          format: date-time
+          title: Start Date
+        end_date:
+          type: string
+          format: date-time
+          title: End Date
+        filter_model:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Filter Model
+        models:
+          items:
+            $ref: '#/components/schemas/ModelUsage'
+          type: array
+          title: Models
+        totals:
+          $ref: '#/components/schemas/UsageTotals'
+      type: object
+      required:
+      - user_id
+      - period_days
+      - start_date
+      - end_date
+      - filter_model
+      - models
+      - totals
+      title: TokenUsageSummaryResponse
+      description: Aggregated token usage summary for a user over a date range.
+    UsageMetadata:
+      properties:
+        input_tokens:
+          type: integer
+          title: Input Tokens
+        output_tokens:
+          type: integer
+          title: Output Tokens
+        total_tokens:
+          type: integer
+          title: Total Tokens
+        input_token_details:
+          anyOf:
+          - $ref: '#/components/schemas/InputTokenDetails'
+          - type: 'null'
+        output_token_details:
+          anyOf:
+          - $ref: '#/components/schemas/OutputTokenDetails'
+          - type: 'null'
+      type: object
+      required:
+      - input_tokens
+      - output_tokens
+      - total_tokens
+      title: UsageMetadata
+      description: Token usage metadata returned by the LLM for a single request.
+    UsageTotals:
+      properties:
+        total_input_tokens:
+          type: integer
+          title: Total Input Tokens
+        total_output_tokens:
+          type: integer
+          title: Total Output Tokens
+        total_tokens:
+          type: integer
+          title: Total Tokens
+        total_requests:
+          type: integer
+          title: Total Requests
+      type: object
+      required:
+      - total_input_tokens
+      - total_output_tokens
+      - total_tokens
+      - total_requests
+      title: UsageTotals
+      description: Aggregated token usage totals across all models.
+    UsedModelsResponse:
+      properties:
+        user_id:
+          type: string
+          title: User Id
+        models:
+          items:
+            $ref: '#/components/schemas/ModelInfo'
+          type: array
+          title: Models
+      type: object
+      required:
+      - user_id
+      - models
+      title: UsedModelsResponse
+      description: List of all LLM models the user has used.
+    UserResponse:
+      properties:
+        name:
+          type: string
+          title: Name
+        email:
+          type: string
+          format: email
+          title: Email
+        role:
+          type: string
+          title: Role
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        is_active:
+          type: boolean
+          title: Is Active
+      type: object
+      required:
+      - name
+      - email
+      - role
+      - created_at
+      - is_active
+      title: UserResponse
+      description: Public user profile returned from GET /me endpoints.
+    UserUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        password:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Password
+      type: object
+      title: UserUpdate
+      description: Fields available for a user to update on their own profile.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    OAuth2PasswordBearer:
+      type: oauth2
+      flows:
+        password:
+          scopes: {}
+          tokenUrl: auth/login/user
